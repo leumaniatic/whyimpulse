@@ -367,7 +367,9 @@ class Alternative(BaseModel):
     review_count: Optional[int] = None
     asin: str
     affiliate_url: str
+    amazon_url: str  # Direct Amazon link
     savings: float
+    savings_percent: float
     why_better: str
 
 class EnhancedProductAnalysis(BaseModel):
