@@ -230,16 +230,104 @@ class EnhancedImpulseSaverAPITester:
         # 4. Smart Alternatives
         if "alternatives" in response and isinstance(response["alternatives"], list):
             if len(response["alternatives"]) > 0:
-                validation_results.append("✅ Product alternatives are present")
+                validation_results.append(f"✅ Product alternatives are present ({len(response['alternatives'])} alternatives)")
                 
                 # Check alternative structure
                 alternative = response["alternatives"][0]
-                required_alt_fields = ["title", "price", "asin", "affiliate_url", "savings", "why_better"]
+                required_alt_fields = ["title", "price", "asin", "affiliate_url", "amazon_url", "savings", "savings_percent", "why_better", "rating", "review_count"]
                 
                 missing_alt_fields = [field for field in required_alt_fields if field not in alternative]
                 
                 if not missing_alt_fields:
                     validation_results.append("✅ Alternative product data structure is valid")
+                    
+                    # Check if both direct Amazon and affiliate links are present
+                    if "amazon_url" in alternative and "affiliate_url" in alternative:
+                        amazon_url = alternative["amazon_url"]
+                        affiliate_url = alternative["affiliate_url"]
+                        
+                        if amazon_url.startswith("https://amazon.com/dp/"):
+                            validation_results.append("✅ Direct Amazon URL format is valid")
+                        else:
+                            validation_results.append(f"❌ Invalid direct Amazon URL format: {amazon_url}")
+                        
+                        if affiliate_url.startswith("https://amazon.com/dp/") and "tag=" in affiliate_url:
+                            validation_results.append("✅ Affiliate URL format is valid")
+                        else:
+                            validation_results.append(f"❌ Invalid affiliate URL format: {affiliate_url}")
+                    else:
+                        validation_results.append("❌ Missing URL fields in alternatives")
+                    
+                    # Special validation for Sony headphones
+                    if is_sony_headphones:
+                        # Check for exactly 2 alternatives
+                        if len(response["alternatives"]) == 2:
+                            validation_results.append("✅ Sony test: Exactly 2 alternatives found as expected")
+                            
+                            # Check for expected alternatives: JBL Tune 760NC and Apple AirPods Max
+                            alt_titles = [alt["title"] for alt in response["alternatives"]]
+                            jbl_found = any("JBL Tune 760NC" in title for title in alt_titles)
+                            airpods_found = any("Apple AirPods Max" in title for title in alt_titles)
+                            
+                            if jbl_found:
+                                validation_results.append("✅ Sony test: JBL Tune 760NC alternative found")
+                                
+                                # Find the JBL alternative
+                                jbl_alt = next((alt for alt in response["alternatives"] if "JBL Tune 760NC" in alt["title"]), None)
+                                if jbl_alt:
+                                    # Check JBL price and savings
+                                    if abs(jbl_alt["price"] - 196.08) < 0.5:
+                                        validation_results.append(f"✅ Sony test: JBL price matches expected value (${jbl_alt['price']})")
+                                    else:
+                                        validation_results.append(f"❌ Sony test: JBL price ${jbl_alt['price']} doesn't match expected $196.08")
+                                    
+                                    if abs(jbl_alt["savings"] - 31.92) < 0.5:
+                                        validation_results.append(f"✅ Sony test: JBL savings matches expected value (${jbl_alt['savings']})")
+                                    else:
+                                        validation_results.append(f"❌ Sony test: JBL savings ${jbl_alt['savings']} doesn't match expected $31.92")
+                                    
+                                    if abs(jbl_alt["savings_percent"] - 14.0) < 0.5:
+                                        validation_results.append(f"✅ Sony test: JBL savings percentage matches expected value ({jbl_alt['savings_percent']}%)")
+                                    else:
+                                        validation_results.append(f"❌ Sony test: JBL savings percentage {jbl_alt['savings_percent']}% doesn't match expected 14%")
+                                    
+                                    if abs(jbl_alt["rating"] - 5.0) < 0.1:
+                                        validation_results.append(f"✅ Sony test: JBL rating matches expected value ({jbl_alt['rating']})")
+                                    else:
+                                        validation_results.append(f"❌ Sony test: JBL rating {jbl_alt['rating']} doesn't match expected 5.0")
+                            else:
+                                validation_results.append("❌ Sony test: JBL Tune 760NC alternative not found")
+                            
+                            if airpods_found:
+                                validation_results.append("✅ Sony test: Apple AirPods Max alternative found")
+                                
+                                # Find the AirPods alternative
+                                airpods_alt = next((alt for alt in response["alternatives"] if "Apple AirPods Max" in alt["title"]), None)
+                                if airpods_alt:
+                                    # Check AirPods price and savings
+                                    if abs(airpods_alt["price"] - 207.48) < 0.5:
+                                        validation_results.append(f"✅ Sony test: AirPods price matches expected value (${airpods_alt['price']})")
+                                    else:
+                                        validation_results.append(f"❌ Sony test: AirPods price ${airpods_alt['price']} doesn't match expected $207.48")
+                                    
+                                    if abs(airpods_alt["savings"] - 20.52) < 0.5:
+                                        validation_results.append(f"✅ Sony test: AirPods savings matches expected value (${airpods_alt['savings']})")
+                                    else:
+                                        validation_results.append(f"❌ Sony test: AirPods savings ${airpods_alt['savings']} doesn't match expected $20.52")
+                                    
+                                    if abs(airpods_alt["savings_percent"] - 9.0) < 0.5:
+                                        validation_results.append(f"✅ Sony test: AirPods savings percentage matches expected value ({airpods_alt['savings_percent']}%)")
+                                    else:
+                                        validation_results.append(f"❌ Sony test: AirPods savings percentage {airpods_alt['savings_percent']}% doesn't match expected 9%")
+                                    
+                                    if abs(airpods_alt["rating"] - 4.3) < 0.1:
+                                        validation_results.append(f"✅ Sony test: AirPods rating matches expected value ({airpods_alt['rating']})")
+                                    else:
+                                        validation_results.append(f"❌ Sony test: AirPods rating {airpods_alt['rating']} doesn't match expected 4.3")
+                            else:
+                                validation_results.append("❌ Sony test: Apple AirPods Max alternative not found")
+                        else:
+                            validation_results.append(f"❌ Sony test: Found {len(response['alternatives'])} alternatives instead of expected 2")
                 else:
                     validation_results.append(f"❌ Alternative product data is missing fields: {', '.join(missing_alt_fields)}")
             else:
