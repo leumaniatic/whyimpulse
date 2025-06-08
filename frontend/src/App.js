@@ -5,7 +5,7 @@ import axios from "axios";
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-const ImpulseSaver = () => {
+const EnhancedImpulseSaver = () => {
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState(null);
@@ -54,6 +54,246 @@ const ImpulseSaver = () => {
     return "bg-gray-500 text-white";
   };
 
+  const getDealQualityColor = (quality) => {
+    const colors = {
+      'excellent': 'bg-green-500 text-white',
+      'very good': 'bg-green-400 text-white',
+      'good': 'bg-blue-500 text-white',
+      'fair': 'bg-yellow-500 text-white',
+      'poor': 'bg-red-500 text-white'
+    };
+    return colors[quality] || 'bg-gray-500 text-white';
+  };
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(amount);
+  };
+
+  const PriceHistoryChart = ({ priceHistory }) => {
+    if (!priceHistory || priceHistory.length === 0) return null;
+
+    const maxPrice = Math.max(...priceHistory.map(p => p.price));
+    const minPrice = Math.min(...priceHistory.map(p => p.price));
+    const priceRange = maxPrice - minPrice;
+
+    return (
+      <div className="bg-white rounded-xl shadow-lg p-6">
+        <h4 className="text-lg font-semibold text-gray-800 mb-4">
+          📈 Price History (Last 30 Data Points)
+        </h4>
+        <div className="h-32 relative border-2 border-gray-200 rounded-lg p-2">
+          <svg className="w-full h-full">
+            <polyline
+              fill="none"
+              stroke="#3b82f6"
+              strokeWidth="2"
+              points={priceHistory.map((point, index) => {
+                const x = (index / (priceHistory.length - 1)) * 100;
+                const y = 100 - ((point.price - minPrice) / priceRange) * 100;
+                return `${x},${y}`;
+              }).join(' ')}
+            />
+          </svg>
+          <div className="absolute top-0 left-0 text-xs text-gray-600">
+            {formatCurrency(maxPrice)}
+          </div>
+          <div className="absolute bottom-0 left-0 text-xs text-gray-600">
+            {formatCurrency(minPrice)}
+          </div>
+        </div>
+        <div className="flex justify-between mt-2 text-xs text-gray-500">
+          <span>{priceHistory[0]?.date}</span>
+          <span>{priceHistory[priceHistory.length - 1]?.date}</span>
+        </div>
+      </div>
+    );
+  };
+
+  const ImpulseFactors = ({ impulseScore, impulseFactors }) => {
+    const factors = [
+      { key: 'price_manipulation', label: 'Price Manipulation', icon: '⚠️' },
+      { key: 'scarcity_tactics', label: 'Scarcity Tactics', icon: '⏰' },
+      { key: 'emotional_triggers', label: 'Emotional Language', icon: '💭' },
+      { key: 'urgency_language', label: 'Urgency Words', icon: '🚨' },
+      { key: 'deal_authenticity', label: 'Deal Authenticity', icon: '🔍' },
+      { key: 'volatility_factor', label: 'Price Volatility', icon: '📊' }
+    ];
+
+    return (
+      <div className="bg-white rounded-xl shadow-lg p-6">
+        <h4 className="text-lg font-semibold text-gray-800 mb-4">
+          🧠 Impulse Factor Breakdown
+        </h4>
+        <div className="space-y-3">
+          {factors.map(factor => (
+            <div key={factor.key} className="flex items-center justify-between">
+              <div className="flex items-center">
+                <span className="mr-2">{factor.icon}</span>
+                <span className="text-sm text-gray-700">{factor.label}</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-24 bg-gray-200 rounded-full h-2 mr-2">
+                  <div 
+                    className="bg-red-500 h-2 rounded-full transition-all duration-500"
+                    style={{ width: `${(impulseFactors[factor.key] / 30) * 100}%` }}
+                  ></div>
+                </div>
+                <span className="text-sm font-semibold text-gray-600">
+                  {impulseFactors[factor.key]}/30
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+          <div className="text-sm text-gray-600">
+            <strong>Total Impulse Score: {impulseScore}/100</strong>
+          </div>
+          <div className="text-xs text-gray-500 mt-1">
+            {impulseScore >= 80 ? "🚨 High manipulation risk - be very careful!" :
+             impulseScore >= 60 ? "⚠️ Moderate manipulation detected" :
+             impulseScore >= 40 ? "🟡 Some impulse triggers present" :
+             "✅ Low manipulation risk"}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const AlternativesSection = ({ alternatives }) => {
+    if (!alternatives || alternatives.length === 0) return null;
+
+    return (
+      <div className="bg-white rounded-xl shadow-lg p-6">
+        <h4 className="text-lg font-semibold text-gray-800 mb-4">
+          💡 Better Alternatives Found
+        </h4>
+        <div className="space-y-4">
+          {alternatives.map((alt, index) => (
+            <div key={index} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <h5 className="font-semibold text-gray-800 text-sm mb-1">
+                    {alt.title.substring(0, 80)}...
+                  </h5>
+                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                    <span className="font-bold text-green-600">
+                      {formatCurrency(alt.price)}
+                    </span>
+                    {alt.rating && (
+                      <span>⭐ {alt.rating.toFixed(1)}</span>
+                    )}
+                    {alt.review_count && (
+                      <span>({alt.review_count} reviews)</span>
+                    )}
+                  </div>
+                  <div className="mt-2 text-xs text-gray-500">
+                    {alt.why_better}
+                  </div>
+                </div>
+                <div className="ml-4 text-center">
+                  <div className="bg-green-100 text-green-800 px-2 py-1 rounded-md text-sm font-semibold">
+                    Save {formatCurrency(alt.savings)}
+                  </div>
+                  <a 
+                    href={alt.affiliate_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-block bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs transition-colors"
+                  >
+                    View Alternative
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  const DealAnalysisCard = ({ dealAnalysis, inflationAnalysis }) => {
+    return (
+      <div className="bg-white rounded-xl shadow-lg p-6">
+        <h4 className="text-lg font-semibold text-gray-800 mb-4">
+          🏷️ Deal Intelligence
+        </h4>
+        
+        {/* Deal Quality */}
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm text-gray-600">Deal Quality</span>
+            <span className={`px-3 py-1 rounded-full text-sm font-semibold ${getDealQualityColor(dealAnalysis.quality)}`}>
+              {dealAnalysis.quality.toUpperCase()}
+            </span>
+          </div>
+          <div className="text-xs text-gray-500 mb-2">
+            Score: {dealAnalysis.score}/100 • {dealAnalysis.analysis}
+          </div>
+        </div>
+
+        {/* Price Statistics */}
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          <div className="text-center p-3 bg-gray-50 rounded-lg">
+            <div className="text-lg font-bold text-green-600">
+              {formatCurrency(dealAnalysis.current_price)}
+            </div>
+            <div className="text-xs text-gray-500">Current Price</div>
+          </div>
+          <div className="text-center p-3 bg-gray-50 rounded-lg">
+            <div className="text-lg font-bold text-gray-600">
+              {formatCurrency(dealAnalysis.average_price)}
+            </div>
+            <div className="text-xs text-gray-500">Average Price</div>
+          </div>
+        </div>
+
+        {/* Savings Indicator */}
+        <div className="mb-4">
+          <div className="flex justify-between text-sm mb-1">
+            <span>Savings vs Average</span>
+            <span className={`font-semibold ${dealAnalysis.savings_percent > 0 ? 'text-green-600' : 'text-red-600'}`}>
+              {dealAnalysis.savings_percent > 0 ? '+' : ''}{dealAnalysis.savings_percent.toFixed(1)}%
+            </span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div 
+              className={`h-2 rounded-full transition-all duration-500 ${dealAnalysis.savings_percent > 0 ? 'bg-green-500' : 'bg-red-500'}`}
+              style={{ width: `${Math.min(Math.abs(dealAnalysis.savings_percent), 50)}%` }}
+            ></div>
+          </div>
+        </div>
+
+        {/* Price Range */}
+        <div className="text-xs text-gray-500 mb-4">
+          <div className="flex justify-between">
+            <span>Lowest: {formatCurrency(dealAnalysis.min_price)}</span>
+            <span>Highest: {formatCurrency(dealAnalysis.max_price)}</span>
+          </div>
+          <div className="mt-1">
+            Better than {(100 - dealAnalysis.percentile).toFixed(1)}% of historical prices
+          </div>
+        </div>
+
+        {/* Inflation Warning */}
+        {inflationAnalysis.inflation_detected && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+            <div className="flex items-center mb-1">
+              <span className="text-red-500 mr-2">⚠️</span>
+              <span className="text-sm font-semibold text-red-800">Price Manipulation Detected</span>
+            </div>
+            <div className="text-xs text-red-700">
+              {inflationAnalysis.analysis}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
       {/* Header */}
@@ -61,24 +301,24 @@ const ImpulseSaver = () => {
         <div className="max-w-6xl mx-auto px-4 py-6">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-gray-900 mb-2">
-              💡 Impulse Saver
+              🧠 Impulse Saver Pro
             </h1>
             <p className="text-lg text-gray-600">
-              Smart Amazon purchase decisions powered by AI
+              AI-powered Amazon analysis with historical pricing & market intelligence
             </p>
           </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-4 py-8">
         {/* URL Input Section */}
         <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
           <div className="text-center mb-6">
             <h2 className="text-2xl font-semibold text-gray-800 mb-2">
-              Paste Amazon Product URL
+              Analyze Amazon Product URL
             </h2>
             <p className="text-gray-600">
-              Get instant AI-powered buying recommendations
+              Get comprehensive analysis with historical pricing, alternatives, and manipulation detection
             </p>
           </div>
 
@@ -111,12 +351,14 @@ const ImpulseSaver = () => {
         {loading && (
           <div className="bg-white rounded-xl shadow-lg p-8 text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-            <p className="text-lg text-gray-600">Analyzing product with AI...</p>
-            <p className="text-sm text-gray-500 mt-2">This may take a few seconds</p>
+            <p className="text-lg text-gray-600">Running comprehensive analysis...</p>
+            <p className="text-sm text-gray-500 mt-2">
+              Analyzing historical prices, detecting manipulation, finding alternatives...
+            </p>
           </div>
         )}
 
-        {/* Analysis Results */}
+        {/* Enhanced Analysis Results */}
         {analysis && (
           <div className="space-y-6">
             {/* Product Overview */}
@@ -135,7 +377,7 @@ const ImpulseSaver = () => {
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">
                     {analysis.product_data.title}
                   </h3>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mb-4">
                     {analysis.product_data.price && (
                       <div>
                         <span className="text-gray-500">Price:</span>
@@ -160,50 +402,70 @@ const ImpulseSaver = () => {
                         </p>
                       </div>
                     )}
-                    {analysis.product_data.availability && (
-                      <div>
-                        <span className="text-gray-500">Status:</span>
-                        <p className="font-semibold text-green-600">
-                          {analysis.product_data.availability}
-                        </p>
-                      </div>
-                    )}
+                    <div>
+                      <span className="text-gray-500">ASIN:</span>
+                      <p className="font-semibold font-mono text-sm">
+                        {analysis.asin}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className={`inline-block px-4 py-2 rounded-full font-semibold text-lg ${getVerdictStyle(analysis.verdict)}`}>
+                      {analysis.verdict}
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      Confidence: {analysis.confidence_score}%
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Verdict & Impulse Score */}
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-white rounded-xl shadow-lg p-6">
-                <h4 className="text-lg font-semibold text-gray-800 mb-4">AI Verdict</h4>
-                <div className={`inline-block px-4 py-2 rounded-full font-semibold text-lg ${getVerdictStyle(analysis.verdict)}`}>
-                  {analysis.verdict}
-                </div>
-              </div>
+            {/* Enhanced Analysis Grid */}
+            <div className="grid lg:grid-cols-2 gap-6">
+              {/* Deal Analysis */}
+              <DealAnalysisCard 
+                dealAnalysis={analysis.deal_analysis} 
+                inflationAnalysis={analysis.inflation_analysis}
+              />
 
+              {/* Impulse Score */}
               <div className="bg-white rounded-xl shadow-lg p-6">
-                <h4 className="text-lg font-semibold text-gray-800 mb-4">Impulse Score</h4>
-                <div className="flex items-center gap-4">
-                  <div className={`text-3xl font-bold px-4 py-2 rounded-full ${getScoreColor(analysis.impulse_score)}`}>
+                <h4 className="text-lg font-semibold text-gray-800 mb-4">Impulse Risk Score</h4>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className={`text-4xl font-bold px-6 py-4 rounded-full ${getScoreColor(analysis.impulse_score)}`}>
                     {analysis.impulse_score}
                   </div>
                   <div className="flex-1">
-                    <div className="w-full bg-gray-200 rounded-full h-3">
+                    <div className="w-full bg-gray-200 rounded-full h-4">
                       <div 
-                        className="bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 h-3 rounded-full transition-all duration-500"
+                        className="bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 h-4 rounded-full transition-all duration-500"
                         style={{ width: `${analysis.impulse_score}%` }}
                       ></div>
                     </div>
-                    <p className="text-sm text-gray-600 mt-1">
-                      {analysis.impulse_score >= 80 ? "High impulse risk!" :
-                       analysis.impulse_score >= 60 ? "Medium impulse" :
-                       analysis.impulse_score >= 40 ? "Low impulse" : "Smart purchase"}
+                    <p className="text-sm text-gray-600 mt-2">
+                      {analysis.impulse_score >= 80 ? "🚨 High manipulation risk!" :
+                       analysis.impulse_score >= 60 ? "⚠️ Moderate manipulation" :
+                       analysis.impulse_score >= 40 ? "🟡 Some manipulation" : "✅ Low manipulation risk"}
                     </p>
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* Price History Chart */}
+            {analysis.price_history && analysis.price_history.length > 0 && (
+              <PriceHistoryChart priceHistory={analysis.price_history} />
+            )}
+
+            {/* Impulse Factors Breakdown */}
+            <ImpulseFactors 
+              impulseScore={analysis.impulse_score} 
+              impulseFactors={analysis.impulse_factors}
+            />
+
+            {/* Alternatives */}
+            <AlternativesSection alternatives={analysis.alternatives} />
 
             {/* Pros & Cons */}
             <div className="grid md:grid-cols-2 gap-6">
@@ -238,10 +500,10 @@ const ImpulseSaver = () => {
               </div>
             </div>
 
-            {/* Recommendation */}
+            {/* AI Recommendation */}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <h4 className="text-lg font-semibold text-gray-800 mb-4">
-                💡 AI Recommendation
+                🤖 Expert AI Recommendation
               </h4>
               <p className="text-gray-700 leading-relaxed">
                 {analysis.recommendation}
@@ -269,10 +531,10 @@ const ImpulseSaver = () => {
       <footer className="bg-white border-t mt-16">
         <div className="max-w-6xl mx-auto px-4 py-8 text-center">
           <p className="text-gray-600">
-            <span className="font-semibold">Impulse Saver</span> - Making smarter purchase decisions with AI
+            <span className="font-semibold">Impulse Saver Pro</span> - Advanced Amazon analysis with AI
           </p>
           <p className="text-sm text-gray-500 mt-2">
-            Analyze any Amazon product to get instant buying recommendations
+            Historical pricing • Manipulation detection • Smart alternatives • AI recommendations
           </p>
         </div>
       </footer>
@@ -281,7 +543,7 @@ const ImpulseSaver = () => {
 };
 
 function App() {
-  return <ImpulseSaver />;
+  return <EnhancedImpulseSaver />;
 }
 
 export default App;
