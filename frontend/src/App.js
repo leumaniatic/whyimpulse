@@ -277,8 +277,7 @@ const EnhancedImpulseSaver = () => {
         <div className="mt-4 p-3 bg-blue-50 rounded-lg">
           <div className="text-sm text-blue-800">
             <span className="font-medium">💡 Smart Tip:</span> These alternatives are found based on similar features, 
-            better ratings, or lower prices. "View on Amazon" shows the direct product page, while "Buy with Support" 
-            includes our affiliate link to support the service.
+            better ratings, or lower prices. Click "Buy Now" to purchase directly on Amazon with our recommendations.
           </div>
         </div>
       </div>
