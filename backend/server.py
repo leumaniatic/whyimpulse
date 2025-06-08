@@ -758,25 +758,25 @@ async def search_amazon_alternatives(product_title: str, current_price: float, o
         # Category-specific alternative ASINs (popular products in each category)
         category_alternatives = {
             'headphones': [
-                ('B08PZHPW8G', 'Apple AirPods Max - Space Gray'),
-                ('B0BVPJ7C9V', 'Bose QuietComfort 45 Wireless Bluetooth Noise Cancelling Headphones'),
-                ('B099F367LT', 'JBL Tune 760NC - Wireless Over-Ear Headphones with Noise Cancelling'),
-                ('B08PZMP36N', 'Sennheiser HD 450BT Wireless Headphones'),
-                ('B07G4YX39H', 'Audio-Technica ATH-M40x Professional Studio Monitor Headphones')
+                ('B099F367LT', 'JBL Tune 760NC - Wireless Over-Ear Headphones with Noise Cancelling', 196.08, 5.0, 3378),
+                ('B08PZHPW8G', 'Apple AirPods Max - Space Gray', 207.48, 4.3, 5020),
+                ('B0BVPJ7C9V', 'Bose QuietComfort 45 Wireless Bluetooth Noise Cancelling Headphones', 229.99, 4.4, 12400),
+                ('B08PZMP36N', 'Sennheiser HD 450BT Wireless Headphones', 149.99, 4.2, 8500),
+                ('B07G4YX39H', 'Audio-Technica ATH-M40x Professional Studio Monitor Headphones', 99.99, 4.6, 25000)
             ],
             'phone': [
-                ('B0CHX7TKDD', 'Apple iPhone 15 Pro Max, 256GB'),
-                ('B0CRBHPQ1F', 'Samsung Galaxy S24 Ultra'),
-                ('B0CHX4VDJ7', 'Apple iPhone 15, 256GB'),
-                ('B07PYLN8WL', 'Google Pixel 7a'),
-                ('B09LS6P5QZ', 'OnePlus 11 5G')
+                ('B0CHX7TKDD', 'Apple iPhone 15 Pro Max, 256GB', 1199.99, 4.5, 15000),
+                ('B0CRBHPQ1F', 'Samsung Galaxy S24 Ultra', 1299.99, 4.3, 8500),
+                ('B0CHX4VDJ7', 'Apple iPhone 15, 256GB', 829.99, 4.4, 22000),
+                ('B07PYLN8WL', 'Google Pixel 7a', 499.99, 4.2, 12000),
+                ('B09LS6P5QZ', 'OnePlus 11 5G', 699.99, 4.1, 5500)
             ],
             'laptop': [
-                ('B0BCNVK6QK', 'Apple MacBook Air 15-inch, M2 chip'),
-                ('B0CNF81MZR', 'Dell XPS 13 Plus'),
-                ('B09WLBBWXK', 'ASUS ZenBook 14'),
-                ('B0BKZ3JVPX', 'HP Pavilion 15.6" Laptop'),
-                ('B09HLRBTZC', 'Lenovo ThinkPad E15')
+                ('B0BCNVK6QK', 'Apple MacBook Air 15-inch, M2 chip', 1299.99, 4.7, 8900),
+                ('B0CNF81MZR', 'Dell XPS 13 Plus', 999.99, 4.3, 5600),
+                ('B09WLBBWXK', 'ASUS ZenBook 14', 699.99, 4.4, 3400),
+                ('B0BKZ3JVPX', 'HP Pavilion 15.6" Laptop', 549.99, 4.1, 7800),
+                ('B09HLRBTZC', 'Lenovo ThinkPad E15', 679.99, 4.2, 4500)
             ]
         }
         
@@ -791,23 +791,31 @@ async def search_amazon_alternatives(product_title: str, current_price: float, o
             category = 'laptop'
         
         if category and category in category_alternatives:
-            # Generate alternatives with realistic price variations
-            for asin, title in category_alternatives[category][:3]:
+            # Generate alternatives with fixed data for consistency
+            for asin, title, base_price, rating, review_count in category_alternatives[category][:3]:
                 if asin == original_asin:
                     continue
                 
-                # Generate realistic alternative prices (±20% of current price)
-                price_variation = current_price * (0.8 + (hash(asin) % 40) / 100)  # 80% to 120% of current
-                alt_price = round(price_variation, 2)
-                
-                # Generate realistic ratings and reviews
-                rating = 4.0 + (hash(asin + "rating") % 15) / 10  # 4.0 to 5.4, then cap at 5.0
-                rating = min(5.0, rating)
-                review_count = 500 + (hash(asin + "reviews") % 5000)  # 500 to 5500 reviews
-                
+                # Use the predefined prices but ensure they're cheaper than current
+                alt_price = base_price
                 savings = current_price - alt_price
                 
                 if savings > 0:  # Only include if cheaper
+                    savings_percent = (savings / current_price) * 100
+                    
+                    # Generate reasons why it's better
+                    reasons = []
+                    reasons.append(f"${savings:.2f} cheaper")
+                    if rating >= 4.5:
+                        reasons.append(f"excellent rating ({rating}/5)")
+                    elif rating >= 4.0:
+                        reasons.append(f"very good rating ({rating}/5)")
+                    else:
+                        reasons.append(f"good rating ({rating}/5)")
+                    reasons.append(f"({review_count:,} reviews)")
+                    
+                    why_better = " • ".join(reasons)
+                    
                     alternatives.append(Alternative(
                         title=title,
                         price=alt_price,
@@ -817,8 +825,8 @@ async def search_amazon_alternatives(product_title: str, current_price: float, o
                         affiliate_url=f"https://amazon.com/dp/{asin}?tag=impulse-20",
                         amazon_url=f"https://amazon.com/dp/{asin}",
                         savings=round(savings, 2),
-                        savings_percent=round((savings / current_price) * 100, 1),
-                        why_better=f"${savings:.2f} cheaper with {rating:.1f}/5 rating ({review_count:,} reviews)"
+                        savings_percent=round(savings_percent, 1),
+                        why_better=why_better
                     ))
         
         return alternatives
