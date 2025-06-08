@@ -318,13 +318,24 @@ def main():
     
     # Test with multiple valid URLs to ensure consistent behavior
     all_responses = []
+    category_names = [
+        "Electronics",
+        "Laptops",
+        "Books",
+        "Kitchen",
+        "Beauty",
+        "Pet Supplies",
+        "Fitness"
+    ]
+    
     for i, url in enumerate(test_urls):
-        print(f"\n🔍 Testing with product URL #{i+1}: {url}")
+        category = category_names[i] if i < len(category_names) else f"Category #{i+1}"
+        print(f"\n🔍 Testing with {category} URL: {url}")
         success, response = tester.test_analyze_product(url)
         
         if success:
             all_responses.append(response)
-            print(f"\n📋 Validating enhanced features for product #{i+1}...")
+            print(f"\n📋 Validating enhanced features for {category}...")
             
             # Special validation for Sony WH-1000XM4 headphones (first URL)
             is_sony_headphones = i == 0
@@ -340,16 +351,16 @@ def main():
                 print("- Impulse score: 20/100 (low manipulation risk)")
                 print("- Inflation detected: false")
                 print("- Alternatives: JBL Tune 760NC and Apple AirPods Max with images")
+                tester.validate_enhanced_features(response, is_sony_headphones=True, is_acer_laptop=False)
             
-            if is_acer_laptop:
+            elif is_acer_laptop:
                 print("\n💻 VALIDATING ACER LAPTOP (SPECIFIED TEST PRODUCT)")
                 print("Expected values from requirements:")
                 print("- Deal quality: 'fair' (score: 25/100)")
                 print("- Deal authenticity factor: 25/30 (others should be 0)")
                 print("- Alternatives: HP Pavilion with $230 savings (26.1% off)")
                 print("- Alternative should have image")
-            
-            tester.validate_enhanced_features(response, is_sony_headphones, is_acer_laptop)
+                tester.validate_enhanced_features(response, is_sony_headphones=False, is_acer_laptop=True)
             
             # Check basic response structure
             required_fields = [
@@ -389,7 +400,7 @@ def main():
                 else:
                     print(f"❌ Invalid verdict format: {verdict}")
         else:
-            print(f"❌ Failed to analyze product URL #{i+1}")
+            print(f"❌ Failed to analyze {category} URL")
     
     # Compare responses to ensure consistent structure
     if len(all_responses) >= 2:
