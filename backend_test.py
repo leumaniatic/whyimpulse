@@ -381,7 +381,8 @@ def main():
     
     # Test with valid Amazon URLs that should have rich historical data
     test_urls = [
-        "https://www.amazon.com/Sony-WH-1000XM4-Canceling-Headphones-phone-call/dp/B0863TXGM3"  # Sony WH-1000XM4 (specified in requirements)
+        "https://www.amazon.com/Sony-WH-1000XM4-Canceling-Headphones-phone-call/dp/B0863TXGM3",  # Sony WH-1000XM4 (specified in requirements)
+        "https://www.amazon.com/acer-Aspire-Copilot-Display-Processor/dp/B0DWNLN3KP/ref=sr_1_2_sspa?_encoding=UTF8&content-id=amzn1.sym.1d3b8f55-c47a-4b7f-a127-3409d1ca6dd1&dib=eyJ2IjoiMSJ9.DiQvAQRlLQCB5Gsx8d6OAKQdyJH2afvkWXNs41V3qFo7-nq45NCujulA4cSK-uYB3We7fDTL9qAvqRgYcLenBScgRnQjipU2mp6uQpXIza4gIvo0DjInn8pZ8t3p86n_kjHsakQ4CGuXbau2n-MbWTxTOI4KjDUSId1GcE_D8EVVlbEn3fsli_StqxG-cBLG_4bDASPquRu9WqT01DfYW-TSQd-yDXwA6eFZJ6FzOzs.iZxbUSNgjOQV-Qj2a6TXRZ9ZWW3IJl6VOk_RR_mWFAE&dib_tag=se&keywords=laptops&pd_rd_r=3fc0bf83-468d-4f3a-8096-3913ae936332&pd_rd_w=OX2sM&pd_rd_wg=pXefA&qid=1749380161&sr=8-2-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&th=1"  # Acer Laptop (specified in requirements)
     ]
     
     # Test with multiple valid URLs to ensure consistent behavior
