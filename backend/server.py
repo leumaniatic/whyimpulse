@@ -608,12 +608,22 @@ class ProductAnalysisRequest(BaseModel):
 
 # Helper Functions
 def extract_asin_from_url(url: str) -> Optional[str]:
-    """Extract ASIN from Amazon URL"""
+    """Extract ASIN from Amazon URL including short URLs"""
+    # Handle Amazon short URLs (a.co) by following redirects
+    if 'a.co' in url:
+        try:
+            response = requests.head(url, allow_redirects=True, timeout=10)
+            url = response.url  # Get the final redirected URL
+        except:
+            # If redirect fails, try to extract directly
+            pass
+    
     patterns = [
         r'/dp/([A-Z0-9]{10})',
         r'/gp/product/([A-Z0-9]{10})',
         r'asin=([A-Z0-9]{10})',
-        r'/([A-Z0-9]{10})/?(?:\?|$)'
+        r'/([A-Z0-9]{10})/?(?:\?|$)',
+        r'/product/([A-Z0-9]{10})'
     ]
     
     for pattern in patterns:
