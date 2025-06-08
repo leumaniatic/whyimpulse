@@ -1255,14 +1255,15 @@ async def root():
 async def analyze_product_enhanced(request: ProductAnalysisRequest):
     """Enhanced product analysis with historical pricing and market intelligence"""
     try:
-        # Validate Amazon URL
-        if 'amazon.' not in request.amazon_url.lower():
-            raise HTTPException(status_code=400, detail="Please provide a valid Amazon URL")
+        # Validate Amazon URL (including short URLs)
+        url_lower = request.amazon_url.lower()
+        if not any(domain in url_lower for domain in ['amazon.', 'a.co']):
+            raise HTTPException(status_code=400, detail="Please provide a valid Amazon URL (amazon.com or a.co short link)")
         
-        # Extract ASIN
+        # Extract ASIN (this will handle short URL redirects)
         asin = extract_asin_from_url(request.amazon_url)
         if not asin:
-            raise HTTPException(status_code=400, detail="Could not extract product ASIN from URL")
+            raise HTTPException(status_code=400, detail="Could not extract product ASIN from URL. Please check the Amazon link.")
         
         # Extract basic product data from Amazon
         product_data = extract_amazon_product_data(request.amazon_url)
