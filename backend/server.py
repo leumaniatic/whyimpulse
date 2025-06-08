@@ -759,25 +759,25 @@ async def search_amazon_alternatives(product_title: str, current_price: float, o
         # Category-specific alternative ASINs (popular products in each category)
         category_alternatives = {
             'headphones': [
-                ('B099F367LT', 'JBL Tune 760NC - Wireless Over-Ear Headphones with Noise Cancelling', 196.08, 5.0, 3378),
-                ('B08PZHPW8G', 'Apple AirPods Max - Space Gray', 207.48, 4.3, 5020),
-                ('B0BVPJ7C9V', 'Bose QuietComfort 45 Wireless Bluetooth Noise Cancelling Headphones', 229.99, 4.4, 12400),
-                ('B08PZMP36N', 'Sennheiser HD 450BT Wireless Headphones', 149.99, 4.2, 8500),
-                ('B07G4YX39H', 'Audio-Technica ATH-M40x Professional Studio Monitor Headphones', 99.99, 4.6, 25000)
+                ('B099F367LT', 'JBL Tune 760NC - Wireless Over-Ear Headphones with Noise Cancelling', 196.08, 5.0, 3378, 'https://m.media-amazon.com/images/I/61lrT-TdyLL._AC_SX679_.jpg'),
+                ('B08PZHPW8G', 'Apple AirPods Max - Space Gray', 207.48, 4.3, 5020, 'https://m.media-amazon.com/images/I/81ErO6zSJnL._AC_SX679_.jpg'),
+                ('B0BVPJ7C9V', 'Bose QuietComfort 45 Wireless Bluetooth Noise Cancelling Headphones', 229.99, 4.4, 12400, 'https://m.media-amazon.com/images/I/51gMV9zVDOL._AC_SX679_.jpg'),
+                ('B08PZMP36N', 'Sennheiser HD 450BT Wireless Headphones', 149.99, 4.2, 8500, 'https://m.media-amazon.com/images/I/61m0TDa5hbL._AC_SX679_.jpg'),
+                ('B07G4YX39H', 'Audio-Technica ATH-M40x Professional Studio Monitor Headphones', 99.99, 4.6, 25000, 'https://m.media-amazon.com/images/I/71Q5qlLhblL._AC_SX679_.jpg')
             ],
             'phone': [
-                ('B0CHX7TKDD', 'Apple iPhone 15 Pro Max, 256GB', 1199.99, 4.5, 15000),
-                ('B0CRBHPQ1F', 'Samsung Galaxy S24 Ultra', 1299.99, 4.3, 8500),
-                ('B0CHX4VDJ7', 'Apple iPhone 15, 256GB', 829.99, 4.4, 22000),
-                ('B07PYLN8WL', 'Google Pixel 7a', 499.99, 4.2, 12000),
-                ('B09LS6P5QZ', 'OnePlus 11 5G', 699.99, 4.1, 5500)
+                ('B0CHX7TKDD', 'Apple iPhone 15 Pro Max, 256GB', 1199.99, 4.5, 15000, 'https://m.media-amazon.com/images/I/81Os1SDWpcL._AC_SX679_.jpg'),
+                ('B0CRBHPQ1F', 'Samsung Galaxy S24 Ultra', 1299.99, 4.3, 8500, 'https://m.media-amazon.com/images/I/71WKLLfKLDL._AC_SX679_.jpg'),
+                ('B0CHX4VDJ7', 'Apple iPhone 15, 256GB', 829.99, 4.4, 22000, 'https://m.media-amazon.com/images/I/61bK6PMOC3L._AC_SX679_.jpg'),
+                ('B07PYLN8WL', 'Google Pixel 7a', 499.99, 4.2, 12000, 'https://m.media-amazon.com/images/I/61sPWzRILjL._AC_SX679_.jpg'),
+                ('B09LS6P5QZ', 'OnePlus 11 5G', 699.99, 4.1, 5500, 'https://m.media-amazon.com/images/I/61NLa-0Qe4L._AC_SX679_.jpg')
             ],
             'laptop': [
-                ('B0BCNVK6QK', 'Apple MacBook Air 15-inch, M2 chip', 1299.99, 4.7, 8900),
-                ('B0CNF81MZR', 'Dell XPS 13 Plus', 999.99, 4.3, 5600),
-                ('B09WLBBWXK', 'ASUS ZenBook 14', 699.99, 4.4, 3400),
-                ('B0BKZ3JVPX', 'HP Pavilion 15.6" Laptop', 549.99, 4.1, 7800),
-                ('B09HLRBTZC', 'Lenovo ThinkPad E15', 679.99, 4.2, 4500)
+                ('B0BCNVK6QK', 'Apple MacBook Air 15-inch, M2 chip, 256GB SSD', 1199.99, 4.7, 8900, 'https://m.media-amazon.com/images/I/71vFKBpKakL._AC_SX679_.jpg'),
+                ('B0CNF81MZR', 'Dell XPS 13 Plus, Intel i7, 16GB RAM, 512GB SSD', 999.99, 4.3, 5600, 'https://m.media-amazon.com/images/I/71QCQ5ljdEL._AC_SX679_.jpg'),
+                ('B0BKZ3JVPX', 'HP Pavilion 15.6" Laptop, AMD Ryzen 7, 16GB RAM', 649.99, 4.1, 7800, 'https://m.media-amazon.com/images/I/713fJc3zZgL._AC_SX679_.jpg'),
+                ('B09HLRBTZC', 'Lenovo ThinkPad E15, Intel i5, 8GB RAM, 256GB SSD', 679.99, 4.2, 4500, 'https://m.media-amazon.com/images/I/61Q3J8zr8wL._AC_SX679_.jpg'),
+                ('B09WLBBWXK', 'ASUS ZenBook 14, Intel i7, 16GB RAM, 1TB SSD', 899.99, 4.4, 3400, 'https://m.media-amazon.com/images/I/71a6n26IzaL._AC_SX679_.jpg')
             ]
         }
         
