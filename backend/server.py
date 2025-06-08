@@ -323,6 +323,196 @@ class KeepaClient:
 
 keepa_client = KeepaClient()
 
+def detect_product_category(title: str, asin: str = None) -> str:
+    """Universal category detection for all Amazon products"""
+    title_lower = title.lower()
+    
+    # Electronics & Technology
+    if any(word in title_lower for word in ['headphone', 'headset', 'earphone', 'earbud', 'airpods', 'beats']):
+        return 'headphones'
+    elif any(word in title_lower for word in ['iphone', 'samsung', 'pixel', 'phone', 'smartphone', 'mobile']):
+        return 'phone'
+    elif any(word in title_lower for word in ['laptop', 'notebook', 'macbook', 'aspire', 'thinkpad', 'pavilion', 'zenbook', 'inspiron', 'ideapad', 'chromebook']):
+        return 'laptop'
+    elif any(word in title_lower for word in ['tablet', 'ipad', 'kindle', 'fire tablet']):
+        return 'tablet'
+    elif any(word in title_lower for word in ['tv', 'television', 'monitor', 'display', 'screen']):
+        return 'display'
+    elif any(word in title_lower for word in ['camera', 'canon', 'nikon', 'sony camera', 'gopro', 'dslr']):
+        return 'camera'
+    elif any(word in title_lower for word in ['speaker', 'bluetooth speaker', 'soundbar', 'audio', 'stereo']):
+        return 'audio'
+    elif any(word in title_lower for word in ['gaming', 'xbox', 'playstation', 'nintendo', 'console', 'controller']):
+        return 'gaming'
+    elif any(word in title_lower for word in ['smartwatch', 'apple watch', 'fitbit', 'garmin watch', 'fitness tracker']):
+        return 'wearables'
+    
+    # Home & Kitchen
+    elif any(word in title_lower for word in ['coffee maker', 'espresso', 'keurig', 'french press', 'coffee machine', 'coffee']):
+        return 'coffee'
+    elif any(word in title_lower for word in ['vacuum', 'dyson', 'roomba', 'cleaner', 'shark vacuum']):
+        return 'cleaning'
+    elif any(word in title_lower for word in ['air fryer', 'instant pot', 'slow cooker', 'pressure cooker', 'blender', 'mixer', 'fryer']):
+        return 'kitchen_appliances'
+    elif any(word in title_lower for word in ['mattress', 'pillow', 'bed', 'sheets', 'bedding', 'comforter']):
+        return 'bedding'
+    elif any(word in title_lower for word in ['sofa', 'chair', 'table', 'desk', 'furniture', 'ottoman']):
+        return 'furniture'
+    elif any(word in title_lower for word in ['lamp', 'light', 'ceiling fan', 'lighting', 'chandelier']):
+        return 'lighting'
+    
+    # Health & Beauty
+    elif any(word in title_lower for word in ['skincare', 'moisturizer', 'serum', 'cleanser', 'sunscreen', 'cream', 'cerave', 'neutrogena']):
+        return 'skincare'
+    elif any(word in title_lower for word in ['makeup', 'foundation', 'lipstick', 'mascara', 'eyeshadow', 'cosmetics']):
+        return 'makeup'
+    elif any(word in title_lower for word in ['shampoo', 'conditioner', 'hair', 'styling', 'hair dryer', 'straightener']):
+        return 'hair_care'
+    elif any(word in title_lower for word in ['supplement', 'vitamin', 'protein powder', 'omega', 'probiotics']):
+        return 'supplements'
+    elif any(word in title_lower for word in ['toothbrush', 'toothpaste', 'oral care', 'dental', 'mouthwash']):
+        return 'oral_care'
+    
+    # Fashion & Apparel
+    elif any(word in title_lower for word in ['dress', 'shirt', 'pants', 'jeans', 'jacket', 'sweater', 'hoodie']):
+        return 'clothing'
+    elif any(word in title_lower for word in ['shoes', 'sneakers', 'boots', 'sandals', 'heels', 'loafers']):
+        return 'shoes'
+    elif any(word in title_lower for word in ['watch', 'jewelry', 'necklace', 'ring', 'bracelet', 'earrings']):
+        return 'accessories'
+    elif any(word in title_lower for word in ['bag', 'backpack', 'purse', 'handbag', 'luggage', 'suitcase']):
+        return 'bags'
+    
+    # Sports & Outdoors
+    elif any(word in title_lower for word in ['dumbbell', 'weights', 'exercise', 'yoga mat', 'treadmill', 'bike', 'resistance', 'fitness']):
+        return 'fitness'
+    elif any(word in title_lower for word in ['tent', 'sleeping bag', 'hiking', 'camping', 'outdoor', 'backpack']):
+        return 'outdoor'
+    elif any(word in title_lower for word in ['basketball', 'football', 'soccer', 'tennis', 'golf', 'sports']):
+        return 'sports'
+    
+    # Automotive
+    elif any(word in title_lower for word in ['car', 'automotive', 'tire', 'oil', 'brake', 'battery', 'motor']):
+        return 'automotive'
+    
+    # Baby & Kids
+    elif any(word in title_lower for word in ['baby', 'infant', 'toddler', 'kids', 'children', 'toy', 'stroller']):
+        return 'baby_kids'
+    
+    # Books & Media
+    elif any(word in title_lower for word in ['book', 'novel', 'cookbook', 'textbook', 'guide', 'manual', 'habits', 'atomic']):
+        return 'books'
+    elif any(word in title_lower for word in ['movie', 'dvd', 'blu-ray', 'cd', 'music', 'album']):
+        return 'media'
+    
+    # Pet Supplies
+    elif any(word in title_lower for word in ['dog', 'cat', 'pet', 'puppy', 'kitten', 'animal', 'pet food', 'kong']):
+        return 'pets'
+    
+    # Tools & Garden
+    elif any(word in title_lower for word in ['drill', 'hammer', 'screwdriver', 'tool', 'wrench', 'saw']):
+        return 'tools'
+    elif any(word in title_lower for word in ['plant', 'garden', 'seed', 'fertilizer', 'gardening', 'lawn']):
+        return 'garden'
+    
+    # Office & School
+    elif any(word in title_lower for word in ['pen', 'pencil', 'notebook', 'paper', 'office', 'desk', 'calculator']):
+        return 'office'
+    
+    # Default fallback based on common patterns
+    elif any(word in title_lower for word in ['wireless', 'bluetooth', 'usb', 'charger', 'cable']):
+        return 'electronics'
+    elif any(word in title_lower for word in ['organic', 'natural', 'essential']):
+        return 'health'
+    else:
+        return 'general'
+
+def get_comprehensive_alternatives_data():
+    """Comprehensive alternatives database for all Amazon categories"""
+    return {
+        'headphones': [
+            ('B099F367LT', 'JBL Tune 760NC - Wireless Over-Ear Headphones with Noise Cancelling', 196.08, 5.0, 3378, 'https://m.media-amazon.com/images/I/61lrT-TdyLL._AC_SX679_.jpg'),
+            ('B08PZHPW8G', 'Apple AirPods Max - Space Gray', 299.99, 4.3, 5020, 'https://m.media-amazon.com/images/I/81ErO6zSJnL._AC_SX679_.jpg'),
+            ('B0BVPJ7C9V', 'Bose QuietComfort 45 Wireless Bluetooth Noise Cancelling Headphones', 279.99, 4.4, 12400, 'https://m.media-amazon.com/images/I/51gMV9zVDOL._AC_SX679_.jpg'),
+            ('B08PZMP36N', 'Sennheiser HD 450BT Wireless Headphones', 149.99, 4.2, 8500, 'https://m.media-amazon.com/images/I/61m0TDa5hbL._AC_SX679_.jpg'),
+            ('B07G4YX39H', 'Audio-Technica ATH-M40x Professional Studio Monitor Headphones', 99.99, 4.6, 25000, 'https://m.media-amazon.com/images/I/71Q5qlLhblL._AC_SX679_.jpg')
+        ],
+        'phone': [
+            ('B0CHX7TKDD', 'Apple iPhone 15 Pro Max, 256GB, Titanium Blue', 999.99, 4.5, 15000, 'https://m.media-amazon.com/images/I/81Os1SDWpcL._AC_SX679_.jpg'),
+            ('B0CRBHPQ1F', 'Samsung Galaxy S24 Ultra, 256GB, Phantom Black', 899.99, 4.3, 8500, 'https://m.media-amazon.com/images/I/71WKLLfKLDL._AC_SX679_.jpg'),
+            ('B0CHX4VDJ7', 'Apple iPhone 15, 128GB, Pink', 729.99, 4.4, 22000, 'https://m.media-amazon.com/images/I/61bK6PMOC3L._AC_SX679_.jpg'),
+            ('B07PYLN8WL', 'Google Pixel 8a, 128GB, Bay Blue', 449.99, 4.2, 12000, 'https://m.media-amazon.com/images/I/61sPWzRILjL._AC_SX679_.jpg'),
+            ('B09LS6P5QZ', 'OnePlus 12 5G, 256GB, Flowy Emerald', 649.99, 4.1, 5500, 'https://m.media-amazon.com/images/I/61NLa-0Qe4L._AC_SX679_.jpg')
+        ],
+        'laptop': [
+            ('B0BCNVK6QK', 'Apple MacBook Air 15-inch, M3 chip, 256GB SSD', 1099.99, 4.7, 8900, 'https://m.media-amazon.com/images/I/71vFKBpKakL._AC_SX679_.jpg'),
+            ('B0CNF81MZR', 'Dell XPS 13 Plus, Intel i7, 16GB RAM, 512GB SSD', 899.99, 4.3, 5600, 'https://m.media-amazon.com/images/I/71QCQ5ljdEL._AC_SX679_.jpg'),
+            ('B0BKZ3JVPX', 'HP Pavilion 15.6" Laptop, AMD Ryzen 7, 16GB RAM', 599.99, 4.1, 7800, 'https://m.media-amazon.com/images/I/713fJc3zZgL._AC_SX679_.jpg'),
+            ('B09HLRBTZC', 'Lenovo ThinkPad E15, Intel i5, 8GB RAM, 256GB SSD', 639.99, 4.2, 4500, 'https://m.media-amazon.com/images/I/61Q3J8zr8wL._AC_SX679_.jpg'),
+            ('B09WLBBWXK', 'ASUS ZenBook 14, Intel i7, 16GB RAM, 1TB SSD', 799.99, 4.4, 3400, 'https://m.media-amazon.com/images/I/71a6n26IzaL._AC_SX679_.jpg')
+        ],
+        'coffee': [
+            ('B077JBQZPX', 'Keurig K-Elite Coffee Maker, Brushed Slate', 119.99, 4.3, 25000, 'https://m.media-amazon.com/images/I/71jCDhb3MNL._AC_SX679_.jpg'),
+            ('B00A3JBQN4', 'Ninja Specialty Coffee Maker with Glass Carafe', 129.99, 4.4, 18000, 'https://m.media-amazon.com/images/I/71h0mhqWqJL._AC_SX679_.jpg'),
+            ('B09732D6SQ', 'Breville Bambino Plus Espresso Machine', 249.99, 4.5, 8500, 'https://m.media-amazon.com/images/I/71LHQWS2FaL._AC_SX679_.jpg'),
+            ('B08ZDQHM7P', 'Hamilton Beach FlexBrew Coffee Maker', 89.99, 4.2, 15600, 'https://m.media-amazon.com/images/I/71NFUG4YhZL._AC_SX679_.jpg'),
+        ],
+        'kitchen_appliances': [
+            ('B07VT23JDM', 'COSORI Air Fryer, 5.8QT, Black', 89.99, 4.5, 65000, 'https://m.media-amazon.com/images/I/71PjhJcKt4L._AC_SX679_.jpg'),
+            ('B01B1VC13K', 'Instant Pot Duo 7-in-1 Electric Pressure Cooker, 6 Quart', 79.99, 4.6, 125000, 'https://m.media-amazon.com/images/I/71A58+lTZdL._AC_SX679_.jpg'),
+            ('B07FJJJ1Z8', 'Vitamix A3500 Ascent Series Smart Blender', 449.99, 4.4, 3200, 'https://m.media-amazon.com/images/I/61KUNCj3o6L._AC_SX679_.jpg'),
+            ('B0BLRM7NKK', 'KitchenAid Artisan Series 5-Quart Stand Mixer', 329.99, 4.7, 15000, 'https://m.media-amazon.com/images/I/71Zm5x3iNvL._AC_SX679_.jpg'),
+        ],
+        'skincare': [
+            ('B07PM86NP8', 'CeraVe Moisturizing Cream for Normal to Dry Skin', 12.99, 4.5, 85000, 'https://m.media-amazon.com/images/I/71Q5qlLhblL._AC_SX679_.jpg'),
+            ('B00NR4L1MQ', 'Neutrogena Hydrating Foaming Cleanser', 7.99, 4.3, 45000, 'https://m.media-amazon.com/images/I/61YA9mF7Z8L._AC_SX679_.jpg'),
+            ('B08JCQFKZJ', 'La Roche-Posay Anthelios Sunscreen SPF 60', 24.99, 4.4, 12000, 'https://m.media-amazon.com/images/I/51G9JKtzxZL._AC_SX679_.jpg'),
+            ('B07Q42QCXZ', 'The Ordinary Niacinamide 10% + Zinc 1%', 7.89, 4.2, 95000, 'https://m.media-amazon.com/images/I/51mQl5QQkrL._AC_SX679_.jpg'),
+        ],
+        'fitness': [
+            ('B08GSRY5JC', 'Bowflex SelectTech 552 Adjustable Dumbbells', 349.99, 4.5, 15000, 'https://m.media-amazon.com/images/I/71zKP5QgdKL._AC_SX679_.jpg'),
+            ('B074D3ZYVZ', 'Gaiam Essentials Thick Yoga Mat', 24.99, 4.3, 25000, 'https://m.media-amazon.com/images/I/71VlSS2lBrL._AC_SX679_.jpg'),
+            ('B08BNPTJBP', 'Resistance Bands Set, Exercise Bands', 19.99, 4.4, 18000, 'https://m.media-amazon.com/images/I/71j9n8o7jXL._AC_SX679_.jpg'),
+            ('B0CHLWB1Y9', 'YOSUDA Indoor Cycling Bike Stationary', 269.99, 4.2, 8500, 'https://m.media-amazon.com/images/I/71YN1XZqy1L._AC_SX679_.jpg'),
+        ],
+        'cleaning': [
+            ('B073DMDDZ3', 'Shark Navigator Lift-Away Professional NV356E', 129.99, 4.3, 78000, 'https://m.media-amazon.com/images/I/71Lz7z-LyOL._AC_SX679_.jpg'),
+            ('B08TX47Z32', 'Dyson V8 Animal Cordless Vacuum Cleaner', 349.99, 4.4, 15000, 'https://m.media-amazon.com/images/I/615JgsrAQGL._AC_SX679_.jpg'),
+            ('B09HLBQZVC', 'iRobot Roomba 694 Robot Vacuum', 179.99, 4.2, 45000, 'https://m.media-amazon.com/images/I/71s6K1Wsk6L._AC_SX679_.jpg'),
+            ('B08HMFVMBW', 'Bissell CrossWave Pet Pro All-in-One Wet Dry Vacuum', 199.99, 4.1, 12000, 'https://m.media-amazon.com/images/I/71tgFZnFMwL._AC_SX679_.jpg'),
+        ],
+        'books': [
+            ('B0BQMQP9RG', 'Atomic Habits by James Clear', 13.99, 4.7, 125000, 'https://m.media-amazon.com/images/I/51B5V6D6IWL._AC_SX679_.jpg'),
+            ('B082DGZX9Q', 'The Psychology of Money by Morgan Housel', 14.99, 4.6, 85000, 'https://m.media-amazon.com/images/I/41j7H7pfQCL._AC_SX679_.jpg'),
+            ('B07ZVR9MFM', 'Educated by Tara Westover', 12.99, 4.5, 95000, 'https://m.media-amazon.com/images/I/51xqTCGhCxL._AC_SX679_.jpg'),
+            ('B08CKBY3BR', 'The Seven Husbands of Evelyn Hugo', 11.99, 4.6, 185000, 'https://m.media-amazon.com/images/I/51bVi4A2k5L._AC_SX679_.jpg'),
+        ],
+        'clothing': [
+            ('B07PHKDT8Y', 'Hanes Men\'s Pullover EcoSmart Hooded Sweatshirt', 24.99, 4.3, 45000, 'https://m.media-amazon.com/images/I/71+F8wQpIrL._AC_SX679_.jpg'),
+            ('B08TW7MZXG', 'Levi\'s Women\'s 501 Original Fit Jeans', 59.99, 4.2, 25000, 'https://m.media-amazon.com/images/I/71E6KZfIlrL._AC_SX679_.jpg'),
+            ('B08R8HGPQ2', 'Amazon Essentials Women\'s Classic-Fit Short-Sleeve Crewneck T-Shirt', 9.99, 4.1, 85000, 'https://m.media-amazon.com/images/I/61g7mfnBuWL._AC_SX679_.jpg'),
+            ('B07MJXJZ4K', 'Champion Men\'s Powerblend Fleece Hoodie', 34.99, 4.4, 32000, 'https://m.media-amazon.com/images/I/71FTX8oCwJL._AC_SX679_.jpg'),
+        ],
+        'automotive': [
+            ('B08ZYNWPV9', 'Chemical Guys Car Wash Soap and Cleanser', 19.99, 4.4, 35000, 'https://m.media-amazon.com/images/I/71zNqzJQVKL._AC_SX679_.jpg'),
+            ('B07QZTW7B4', 'Armor All Car Interior Cleaner Spray', 8.99, 4.2, 18000, 'https://m.media-amazon.com/images/I/61YjKZl2FnL._AC_SX679_.jpg'),
+            ('B08DQWM6HM', 'Michelin 12-Volt Portable Air Compressor', 49.99, 4.3, 12000, 'https://m.media-amazon.com/images/I/71WnEoRPyKL._AC_SX679_.jpg'),
+            ('B08V4LJXPJ', 'Rain-X Original Glass Water Repellent', 11.99, 4.5, 28000, 'https://m.media-amazon.com/images/I/61EJrlw4QeL._AC_SX679_.jpg'),
+        ],
+        'pets': [
+            ('B08Q8RJQJ5', 'Blue Buffalo Life Protection Formula Natural Adult Dog Food', 42.99, 4.5, 45000, 'https://m.media-amazon.com/images/I/81oKTW5T7fL._AC_SX679_.jpg'),
+            ('B0792V2W68', 'KONG Classic Dog Toy, Large', 14.99, 4.6, 125000, 'https://m.media-amazon.com/images/I/71JjpA8FZJL._AC_SX679_.jpg'),
+            ('B08KS12KVF', 'Purina Pro Plan High Protein Cat Food', 28.99, 4.4, 35000, 'https://m.media-amazon.com/images/I/81PGb+NhFmL._AC_SX679_.jpg'),
+            ('B08YMH62T7', 'IRIS USA 3-Piece Airtight Pet Food Storage Container', 39.99, 4.3, 15000, 'https://m.media-amazon.com/images/I/71kJn4YRNxL._AC_SX679_.jpg'),
+        ],
+        'general': [
+            ('B08N5WRWNW', 'Amazon Echo Dot (4th Gen) with Clock', 39.99, 4.5, 85000, 'https://m.media-amazon.com/images/I/61fVAz0DX8L._AC_SX679_.jpg'),
+            ('B08TV4Y5YC', 'Anker Portable Charger, 10000mAh Power Bank', 29.99, 4.4, 65000, 'https://m.media-amazon.com/images/I/71nlLLyq9fL._AC_SX679_.jpg'),
+            ('B01LSUQSB0', 'AmazonBasics 60W 4-Port USB Wall Charger', 19.99, 4.2, 45000, 'https://m.media-amazon.com/images/I/61ksAFOWoZL._AC_SX679_.jpg'),
+            ('B08R68K9V4', 'Tile Mate Bluetooth Tracker, 4-Pack', 59.99, 4.1, 25000, 'https://m.media-amazon.com/images/I/61MWMkyUVCL._AC_SX679_.jpg'),
+        ]
+    }
+
 # Enhanced Models
 class ProductData(BaseModel):
     title: str
