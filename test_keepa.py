@@ -36,39 +36,44 @@ async def test_keepa_api():
             "history": 1,
             "offers": 20
         }
-    
-    try:
-        async with aiohttp.ClientSession() as session:
-            print(f"Making request to: {url}")
-            print(f"Parameters: {params}")
-            
-            async with session.get(url, params=params) as response:
-                print(f"Response status: {response.status}")
-                print(f"Response headers: {dict(response.headers)}")
+        
+        try:
+            async with aiohttp.ClientSession() as session:
+                print(f"Making request to: {url}")
+                print(f"Parameters: {params}")
                 
-                if response.status == 200:
-                    data = await response.json()
-                    print(f"Response data keys: {list(data.keys())}")
+                async with session.get(url, params=params) as response:
+                    print(f"Response status: {response.status}")
                     
-                    if 'products' in data and data['products']:
-                        product = data['products'][0]
-                        print(f"Product keys: {list(product.keys())}")
-                        print(f"Product title: {product.get('title', 'No title')}")
-                        print(f"CSV data length: {len(product.get('csv', []))}")
-                        print(f"First 10 CSV values: {product.get('csv', [])[:10]}")
+                    if response.status == 200:
+                        data = await response.json()
+                        print(f"Response data keys: {list(data.keys())}")
                         
-                        return data
+                        if 'products' in data and data['products']:
+                            product = data['products'][0]
+                            print(f"Product title: {product.get('title', 'No title')}")
+                            print(f"CSV data length: {len(product.get('csv', []))}")
+                            
+                            # Check if we have valid CSV data
+                            csv_data = product.get('csv', [])
+                            valid_data = [x for x in csv_data if x is not None and x != -1]
+                            print(f"Valid CSV data points: {len(valid_data)}")
+                            
+                            if valid_data:
+                                print(f"Sample valid data: {valid_data[:10]}")
+                                return data  # Return first successful result
+                            else:
+                                print("No valid price data found")
+                        else:
+                            print("No products found in response")
                     else:
-                        print("No products found in response")
-                        return {}
-                else:
-                    error_text = await response.text()
-                    print(f"Error response: {error_text}")
-                    return {}
-                    
-    except Exception as e:
-        print(f"Exception during API call: {e}")
-        return {}
+                        error_text = await response.text()
+                        print(f"Error response: {error_text}")
+                        
+        except Exception as e:
+            print(f"Exception during API call: {e}")
+    
+    return {}  # Return empty if no valid data found
 
 async def test_keepa_search():
     """Test Keepa search functionality"""
