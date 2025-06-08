@@ -89,21 +89,28 @@ class KeepaClient:
         product = product_data["products"][0]
         csv_data = product.get("csv", [])
         
-        if len(csv_data) < 2:
+        # Keepa CSV format: [0] is Amazon price history, [1] is New price, etc.
+        # We want Amazon price history (index 0)
+        if not csv_data or len(csv_data) == 0:
+            return []
+        
+        amazon_price_history = csv_data[0] if isinstance(csv_data[0], list) else csv_data
+        
+        if len(amazon_price_history) < 2:
             return []
         
         # Keepa time format: minutes since epoch (January 1, 2011, 00:00 UTC)
         keepa_epoch = datetime(2011, 1, 1)
         
         price_history = []
-        for i in range(0, len(csv_data), 2):
-            if i + 1 < len(csv_data):
-                timestamp_minutes = csv_data[i]
-                price_cents = csv_data[i + 1]
+        for i in range(0, len(amazon_price_history), 2):
+            if i + 1 < len(amazon_price_history):
+                timestamp_minutes = amazon_price_history[i]
+                price_cents = amazon_price_history[i + 1]
                 
                 # Ensure we have valid numeric values
                 if (timestamp_minutes is not None and price_cents is not None and 
-                    timestamp_minutes != -1 and price_cents != -1 and
+                    timestamp_minutes != -1 and price_cents != -1 and price_cents > 0 and
                     isinstance(timestamp_minutes, (int, float)) and isinstance(price_cents, (int, float))):
                     
                     try:
