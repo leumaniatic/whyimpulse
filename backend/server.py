@@ -660,19 +660,12 @@ def extract_amazon_product_data(url: str) -> ProductData:
         'Upgrade-Insecure-Requests': '1',
     }
     
-    # Handle Amazon short URLs by following redirects first
-    final_url = url
-    if 'a.co' in url:
-        try:
-            response = requests.get(url, headers=headers, timeout=10, allow_redirects=True)
-            final_url = response.url
-        except:
-            pass
-    
+    # Resolve short URLs to full Amazon URLs
+    final_url = resolve_amazon_url(url)
     asin = extract_asin_from_url(final_url)
     
     try:
-        response = requests.get(final_url, headers=headers, timeout=10)
+        response = requests.get(final_url, headers=headers, timeout=15)
         response.raise_for_status()
         
         soup = BeautifulSoup(response.content, 'html.parser')
