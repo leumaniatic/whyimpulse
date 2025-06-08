@@ -309,7 +309,20 @@ def main():
         if success:
             all_responses.append(response)
             print(f"\n📋 Validating enhanced features for product #{i+1}...")
-            tester.validate_enhanced_features(response)
+            
+            # Special validation for Sony WH-1000XM4 headphones (first URL)
+            is_sony_headphones = i == 0
+            if is_sony_headphones:
+                print("\n🎧 VALIDATING SONY WH-1000XM4 HEADPHONES (SPECIFIED TEST PRODUCT)")
+                print("Expected values from requirements:")
+                print("- Current price: $228")
+                print("- Average price: $272.67 (16.4% savings)")
+                print("- Deal quality: 'good' (score: 78/100)")
+                print("- Price range: $129.99 - $349.99")
+                print("- Impulse score: 20/100 (low manipulation risk)")
+                print("- Inflation detected: false")
+            
+            tester.validate_enhanced_features(response, is_sony_headphones)
             
             # Check basic response structure
             required_fields = [
