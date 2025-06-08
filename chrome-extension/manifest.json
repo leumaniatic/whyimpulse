@@ -1,0 +1,68 @@
+{
+  "manifest_version": 3,
+  "name": "WHY IMPULSE? - Smart Amazon Shopping",
+  "version": "1.0.0",
+  "description": "AI-powered Amazon product analysis with historical pricing, alternatives, and impulse detection. Make smarter purchasing decisions!",
+  
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  
+  "host_permissions": [
+    "https://*.amazon.com/*",
+    "https://*.amazon.co.uk/*",
+    "https://*.amazon.ca/*",
+    "https://*.amazon.de/*",
+    "https://*.amazon.fr/*",
+    "https://*.amazon.it/*",
+    "https://*.amazon.es/*",
+    "https://a.co/*",
+    "https://amzn.to/*"
+  ],
+  
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "WHY IMPULSE? - Analyze Amazon Product",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.amazon.com/*",
+        "https://*.amazon.co.uk/*",
+        "https://*.amazon.ca/*",
+        "https://*.amazon.de/*",
+        "https://*.amazon.fr/*",
+        "https://*.amazon.it/*",
+        "https://*.amazon.es/*"
+      ],
+      "js": ["content.js"],
+      "css": ["content.css"]
+    }
+  ],
+  
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  
+  "background": {
+    "service_worker": "background.js"
+  },
+  
+  "web_accessible_resources": [
+    {
+      "resources": ["analysis-panel.html"],
+      "matches": ["https://*.amazon.com/*"]
+    }
+  ]
+}
