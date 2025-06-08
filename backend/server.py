@@ -368,6 +368,7 @@ class Alternative(BaseModel):
     asin: str
     affiliate_url: str
     amazon_url: str  # Direct Amazon link
+    image_url: Optional[str] = None  # Product image
     savings: float
     savings_percent: float
     why_better: str
