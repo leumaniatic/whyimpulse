@@ -503,23 +503,15 @@ const EnhancedImpulseSaver = () => {
                     </div>
                   </div>
                   
-                  {/* Affiliate Call-to-Action */}
-                  <div className="mt-4 flex gap-3">
-                    <a 
-                      href={analysis.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
-                    >
-                      View on Amazon
-                    </a>
+                  {/* Buy Now Button with Affiliate Link */}
+                  <div className="mt-4">
                     <a 
                       href={analysis.affiliate_link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                      className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg font-bold text-lg transition-colors shadow-lg hover:shadow-xl transform hover:scale-105"
                     >
-                      Buy Now (Support Us)
+                      🛒 Buy Now on Amazon
                     </a>
                   </div>
                 </div>
