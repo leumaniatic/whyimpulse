@@ -237,23 +237,15 @@ const EnhancedImpulseSaver = () => {
                     </div>
                   </div>
                   
-                  {/* Action Buttons */}
+                  {/* Buy Now Button */}
                   <div className="ml-4 flex flex-col gap-2">
-                    <a 
-                      href={alt.amazon_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded text-sm font-medium transition-colors text-center"
-                    >
-                      View on Amazon
-                    </a>
                     <a 
                       href={alt.affiliate_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium transition-colors text-center"
+                      className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded text-sm font-bold transition-colors text-center"
                     >
-                      Buy with Support
+                      🛒 Buy Now
                     </a>
                   </div>
                 </div>
