@@ -36,6 +36,26 @@ OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 KEEPA_API_KEY = os.environ.get('KEEPA_API_KEY')
 AMAZON_AFFILIATE_TAG = os.environ.get('AMAZON_AFFILIATE_TAG', 'impulse-20')
 
+def generate_affiliate_link(asin: str, additional_params: dict = None) -> str:
+    """Generate Amazon affiliate link with proper tracking"""
+    base_url = f"https://amazon.com/dp/{asin}"
+    params = {"tag": AMAZON_AFFILIATE_TAG}
+    
+    if additional_params:
+        params.update(additional_params)
+    
+    param_string = "&".join([f"{k}={v}" for k, v in params.items()])
+    return f"{base_url}?{param_string}"
+
+def generate_enhanced_affiliate_link(asin: str, source: str = "whyimpulse") -> str:
+    """Generate enhanced affiliate link with tracking parameters"""
+    additional_params = {
+        "ref": f"whyimpulse_{source}",
+        "linkCode": "ll1",
+        "linkId": "whyimpulse"
+    }
+    return generate_affiliate_link(asin, additional_params)
+
 # Keepa API Client
 class KeepaClient:
     def __init__(self):
