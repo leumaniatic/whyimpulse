@@ -588,6 +588,7 @@ class EnhancedProductAnalysis(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     url: str
     asin: str
+    affiliate_link: str  # Add affiliate link for main product
     product_data: ProductData
     price_history: List[PriceHistory]
     deal_analysis: DealAnalysis
