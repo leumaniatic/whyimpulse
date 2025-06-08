@@ -1,0 +1,22 @@
+Hey GPT-4! I need to create a comprehensive Amazon product analysis system that works for ALL categories on Amazon.com. 
+
+The system should:
+1. Detect ANY product category automatically (electronics, books, clothing, home, kitchen, beauty, toys, sports, automotive, etc.)
+2. Calculate impulse factors for ALL product types
+3. Find relevant alternatives for ANY category
+4. Show product images for alternatives
+5. Provide proper analysis regardless of category
+
+Current issues:
+- Only works well for headphones, phones, laptops
+- Many categories show no alternatives
+- Impulse factors might not be calculated properly for all categories
+- Need comprehensive category detection
+
+What's the best approach to:
+1. Create universal category detection that covers all Amazon categories?
+2. Generate relevant alternatives for any product type?
+3. Ensure impulse factor calculation works across all categories?
+4. Make the analysis robust and meaningful for any Amazon product?
+
+Please provide a comprehensive strategy for making this work universally.
