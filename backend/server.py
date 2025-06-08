@@ -34,6 +34,7 @@ api_router = APIRouter(prefix="/api")
 # API Keys
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 KEEPA_API_KEY = os.environ.get('KEEPA_API_KEY')
+AMAZON_AFFILIATE_TAG = os.environ.get('AMAZON_AFFILIATE_TAG', 'impulse-20')
 
 # Keepa API Client
 class KeepaClient:
