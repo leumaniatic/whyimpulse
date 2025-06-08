@@ -730,7 +730,7 @@ def extract_amazon_product_data(url: str) -> ProductData:
 
 def calculate_impulse_score(product_data: ProductData, price_history: List[Dict], 
                           deal_analysis: Dict, inflation_analysis: Dict) -> tuple[int, Dict]:
-    """Calculate sophisticated impulse score with detailed factors"""
+    """Calculate sophisticated impulse score with detailed factors for ALL categories"""
     factors = {
         "price_manipulation": 0,
         "scarcity_tactics": 0,
@@ -739,6 +739,9 @@ def calculate_impulse_score(product_data: ProductData, price_history: List[Dict]
         "deal_authenticity": 0,
         "volatility_factor": 0
     }
+    
+    # Get product category for category-specific analysis
+    category = detect_product_category(product_data.title, product_data.asin)
     
     # Price manipulation factor (0-30 points)
     if inflation_analysis.get("inflation_detected", False):
@@ -754,19 +757,35 @@ def calculate_impulse_score(product_data: ProductData, price_history: List[Dict]
         factors["deal_authenticity"] = 15
     elif deal_quality in ["good", "very good"]:
         factors["deal_authenticity"] = 5
-    else:  # excellent
+    else:  # excellent or unknown
         factors["deal_authenticity"] = 0
     
     # Scarcity and urgency language analysis
     title = product_data.title.lower()
     availability = (product_data.availability or "").lower()
     
+    # Category-specific scarcity words
     scarcity_words = ["limited", "only", "left", "hurry", "while supplies last", "limited time", 
-                     "exclusive", "rare", "last chance", "final", "clearance"]
+                     "exclusive", "rare", "last chance", "final", "clearance", "sold out"]
     urgency_words = ["today only", "24 hours", "flash sale", "lightning deal", "ends soon",
-                    "hurry", "now", "immediate", "instant", "quick"]
-    emotional_words = ["amazing", "incredible", "unbelievable", "fantastic", "revolutionary",
-                      "life-changing", "must-have", "essential", "perfect", "ultimate"]
+                    "hurry", "now", "immediate", "instant", "quick", "urgent"]
+    
+    # Category-specific emotional triggers
+    if category in ['skincare', 'makeup', 'hair_care', 'supplements']:
+        emotional_words = ["amazing", "miracle", "revolutionary", "life-changing", "perfect", 
+                          "transform", "radiant", "youthful", "anti-aging", "instant"]
+    elif category in ['fitness', 'sports', 'outdoor']:
+        emotional_words = ["ultimate", "professional", "elite", "powerful", "extreme", 
+                          "championship", "pro", "advanced", "superior", "best"]
+    elif category in ['electronics', 'gaming', 'phone', 'laptop']:
+        emotional_words = ["cutting-edge", "revolutionary", "breakthrough", "advanced", "smart",
+                          "premium", "pro", "ultimate", "next-gen", "innovative"]
+    elif category in ['books', 'media']:
+        emotional_words = ["bestseller", "acclaimed", "award-winning", "must-read", "essential",
+                          "breakthrough", "inspiring", "life-changing", "powerful"]
+    else:
+        emotional_words = ["amazing", "incredible", "unbelievable", "fantastic", "revolutionary",
+                          "life-changing", "must-have", "essential", "perfect", "ultimate"]
     
     # Scarcity factor (0-20 points)
     scarcity_count = sum(1 for word in scarcity_words if word in title or word in availability)
@@ -790,9 +809,21 @@ def calculate_impulse_score(product_data: ProductData, price_history: List[Dict]
     # Calculate total impulse score
     total_score = sum(factors.values())
     
-    # Add context-based adjustments
+    # Add context-based adjustments for different categories
     if "sale" in title or "deal" in title:
         total_score += 5
+    
+    # Category-specific adjustments
+    if category in ['books', 'media']:
+        # Books generally have lower impulse risk
+        total_score = max(0, total_score - 5)
+    elif category in ['skincare', 'makeup', 'supplements']:
+        # Beauty/health products often use more emotional marketing
+        total_score += 3
+    elif category in ['electronics', 'gaming']:
+        # Tech products often have artificial urgency
+        if "new" in title or "latest" in title:
+            total_score += 3
     
     if product_data.review_count:
         try:
