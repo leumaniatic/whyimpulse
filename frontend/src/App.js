@@ -128,25 +128,31 @@ const EnhancedImpulseSaver = () => {
           🧠 Impulse Factor Breakdown
         </h4>
         <div className="space-y-3">
-          {factors.map(factor => (
-            <div key={factor.key} className="flex items-center justify-between">
-              <div className="flex items-center">
-                <span className="mr-2">{factor.icon}</span>
-                <span className="text-sm text-gray-700">{factor.label}</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-24 bg-gray-200 rounded-full h-2 mr-2">
-                  <div 
-                    className="bg-red-500 h-2 rounded-full transition-all duration-500"
-                    style={{ width: `${(impulseFactors[factor.key] / 30) * 100}%` }}
-                  ></div>
+          {factors.map(factor => {
+            const factorValue = impulseFactors[factor.key] || 0;
+            const maxValue = 30; // Maximum value for any factor
+            const percentage = (factorValue / maxValue) * 100;
+            
+            return (
+              <div key={factor.key} className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <span className="mr-2">{factor.icon}</span>
+                  <span className="text-sm text-gray-700">{factor.label}</span>
                 </div>
-                <span className="text-sm font-semibold text-gray-600">
-                  {impulseFactors[factor.key]}/30
-                </span>
+                <div className="flex items-center">
+                  <div className="w-24 bg-gray-200 rounded-full h-2 mr-2">
+                    <div 
+                      className="bg-red-500 h-2 rounded-full transition-all duration-500"
+                      style={{ width: `${Math.max(5, percentage)}%` }}
+                    ></div>
+                  </div>
+                  <span className="text-sm font-semibold text-gray-600">
+                    {factorValue}/{maxValue}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
         <div className="mt-4 p-3 bg-gray-50 rounded-lg">
           <div className="text-sm text-gray-600">
