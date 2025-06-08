@@ -251,7 +251,15 @@ class KeepaClient:
     def detect_price_inflation(self, price_history: List[Dict], days: int = 30) -> Dict:
         """Detect recent price manipulation"""
         if len(price_history) < 2:
-            return {"inflation_detected": False, "analysis": "Insufficient data"}
+            return {
+                "inflation_detected": False, 
+                "inflation_rate": 0.0,
+                "spike_factor": 0.0,
+                "period_days": days,
+                "start_price": 0.0,
+                "end_price": 0.0,
+                "analysis": "Insufficient data for inflation analysis"
+            }
         
         cutoff_date = datetime.now() - timedelta(days=days)
         recent_entries = [
@@ -260,7 +268,15 @@ class KeepaClient:
         ]
         
         if len(recent_entries) < 2:
-            return {"inflation_detected": False, "analysis": "Insufficient recent data"}
+            return {
+                "inflation_detected": False, 
+                "inflation_rate": 0.0,
+                "spike_factor": 0.0,
+                "period_days": days,
+                "start_price": 0.0,
+                "end_price": 0.0,
+                "analysis": "Insufficient recent data for inflation analysis"
+            }
         
         # Calculate inflation rate
         oldest_recent = recent_entries[0]["price"]
