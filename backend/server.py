@@ -788,7 +788,7 @@ async def search_amazon_alternatives(product_title: str, current_price: float, o
             category = 'headphones'
         elif any(word in title_lower for word in ['phone', 'iphone', 'galaxy', 'pixel']):
             category = 'phone'
-        elif any(word in title_lower for word in ['laptop', 'notebook', 'macbook']):
+        elif any(word in title_lower for word in ['laptop', 'notebook', 'macbook', 'aspire', 'thinkpad', 'pavilion', 'zenbook', 'inspiron', 'ideapad']):
             category = 'laptop'
         
         if category and category in category_alternatives:
