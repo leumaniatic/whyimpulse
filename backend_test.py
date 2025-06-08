@@ -570,7 +570,10 @@ def main():
         "https://www.amazon.com/KONG-Classic-Dog-Toy-Large/dp/B0002AR0II",  # KONG dog toy
         
         # 7. Fitness Equipment (Test new category)
-        "https://www.amazon.com/Bodylastics-Resistance-Exercise-Snap-Guard/dp/B006NZZQJE"  # Resistance bands
+        "https://www.amazon.com/Bodylastics-Resistance-Exercise-Snap-Guard/dp/B006NZZQJE",  # Resistance bands
+        
+        # 8. Amazon Short URL (Testing new functionality)
+        "https://a.co/d/0PqJoaA"  # Amazon short URL for a product
     ]
     
     # Test with multiple valid URLs to ensure consistent behavior
