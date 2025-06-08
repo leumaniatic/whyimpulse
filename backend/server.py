@@ -1289,10 +1289,11 @@ async def analyze_product_enhanced(request: ProductAnalysisRequest):
             alternatives, impulse_score
         )
         
-        # Create comprehensive analysis object
+        # Create analysis object
         result = EnhancedProductAnalysis(
             url=request.amazon_url,
             asin=asin,
+            affiliate_link=generate_enhanced_affiliate_link(asin, "main_product"),
             product_data=product_data,
             price_history=[PriceHistory(**p) for p in price_history[-30:]],  # Last 30 data points
             deal_analysis=DealAnalysis(**deal_analysis),
