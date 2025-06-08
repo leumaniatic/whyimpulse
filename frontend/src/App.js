@@ -593,7 +593,7 @@ const EnhancedImpulseSaver = () => {
       <footer className="bg-white border-t mt-16">
         <div className="max-w-6xl mx-auto px-4 py-8 text-center">
           <p className="text-gray-600">
-            <span className="font-semibold">Impulse Saver Pro</span> - Advanced Amazon analysis with AI
+            <span className="font-semibold">WHY IMPULSE?</span> - Advanced Amazon analysis with AI
           </p>
           <p className="text-sm text-gray-500 mt-2">
             Historical pricing • Manipulation detection • Smart alternatives • AI recommendations
