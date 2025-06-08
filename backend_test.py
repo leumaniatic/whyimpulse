@@ -120,7 +120,7 @@ class EnhancedImpulseSaverAPITester:
         print("="*50)
         return self.tests_passed == self.tests_run
 
-    def validate_enhanced_features(self, response, is_sony_headphones=False):
+    def validate_enhanced_features(self, response, is_sony_headphones=False, is_acer_laptop=False):
         """Validate the enhanced features in the response"""
         validation_results = []
         
@@ -193,6 +193,22 @@ class EnhancedImpulseSaverAPITester:
                                     validation_results.append(f"✅ Sony test: {key} matches expected value ({actual_value})")
                                 else:
                                     validation_results.append(f"❌ Sony test: {key} value {actual_value} doesn't match expected {expected_value}")
+                
+                # Special validation for Acer laptop
+                if is_acer_laptop:
+                    # Validate expected values from requirements
+                    expected_values = {
+                        "quality": "fair",
+                        "score": 25
+                    }
+                    
+                    for key, expected_value in expected_values.items():
+                        if key in deal_analysis:
+                            actual_value = deal_analysis[key]
+                            if actual_value == expected_value:
+                                validation_results.append(f"✅ Acer test: {key} matches expected value ({actual_value})")
+                            else:
+                                validation_results.append(f"❌ Acer test: {key} value {actual_value} doesn't match expected {expected_value}")
             else:
                 validation_results.append(f"❌ Deal analysis is missing fields: {', '.join(missing_deal_fields)}")
         else:
@@ -295,6 +311,12 @@ class EnhancedImpulseSaverAPITester:
                                         validation_results.append(f"✅ Sony test: JBL rating matches expected value ({jbl_alt['rating']})")
                                     else:
                                         validation_results.append(f"❌ Sony test: JBL rating {jbl_alt['rating']} doesn't match expected 5.0")
+                                    
+                                    # Check for image URL
+                                    if "image_url" in jbl_alt and jbl_alt["image_url"]:
+                                        validation_results.append("✅ Sony test: JBL alternative has image URL")
+                                    else:
+                                        validation_results.append("❌ Sony test: JBL alternative missing image URL")
                             else:
                                 validation_results.append("❌ Sony test: JBL Tune 760NC alternative not found")
                             
@@ -324,10 +346,46 @@ class EnhancedImpulseSaverAPITester:
                                         validation_results.append(f"✅ Sony test: AirPods rating matches expected value ({airpods_alt['rating']})")
                                     else:
                                         validation_results.append(f"❌ Sony test: AirPods rating {airpods_alt['rating']} doesn't match expected 4.3")
+                                    
+                                    # Check for image URL
+                                    if "image_url" in airpods_alt and airpods_alt["image_url"]:
+                                        validation_results.append("✅ Sony test: AirPods alternative has image URL")
+                                    else:
+                                        validation_results.append("❌ Sony test: AirPods alternative missing image URL")
                             else:
                                 validation_results.append("❌ Sony test: Apple AirPods Max alternative not found")
                         else:
                             validation_results.append(f"❌ Sony test: Found {len(response['alternatives'])} alternatives instead of expected 2")
+                    
+                    # Special validation for Acer laptop
+                    if is_acer_laptop:
+                        # Check for HP Pavilion alternative
+                        hp_found = any("HP Pavilion" in alt["title"] for alt in response["alternatives"])
+                        
+                        if hp_found:
+                            validation_results.append("✅ Acer test: HP Pavilion alternative found")
+                            
+                            # Find the HP alternative
+                            hp_alt = next((alt for alt in response["alternatives"] if "HP Pavilion" in alt["title"]), None)
+                            if hp_alt:
+                                # Check HP price and savings
+                                if abs(hp_alt["savings"] - 230) < 0.5:
+                                    validation_results.append(f"✅ Acer test: HP savings matches expected value (${hp_alt['savings']})")
+                                else:
+                                    validation_results.append(f"❌ Acer test: HP savings ${hp_alt['savings']} doesn't match expected $230")
+                                
+                                if abs(hp_alt["savings_percent"] - 26.1) < 0.5:
+                                    validation_results.append(f"✅ Acer test: HP savings percentage matches expected value ({hp_alt['savings_percent']}%)")
+                                else:
+                                    validation_results.append(f"❌ Acer test: HP savings percentage {hp_alt['savings_percent']}% doesn't match expected 26.1%")
+                                
+                                # Check for image URL
+                                if "image_url" in hp_alt and hp_alt["image_url"]:
+                                    validation_results.append("✅ Acer test: HP alternative has image URL")
+                                else:
+                                    validation_results.append("❌ Acer test: HP alternative missing image URL")
+                        else:
+                            validation_results.append("❌ Acer test: HP Pavilion alternative not found")
                 else:
                     validation_results.append(f"❌ Alternative product data is missing fields: {', '.join(missing_alt_fields)}")
             else:
@@ -355,6 +413,23 @@ class EnhancedImpulseSaverAPITester:
                         validation_results.append("✅ Sony test: Impulse score matches expected value (20/100)")
                     else:
                         validation_results.append(f"❌ Sony test: Impulse score {impulse_score} doesn't match expected value (20/100)")
+                
+                # Special validation for Acer laptop
+                if is_acer_laptop and "impulse_factors" in response:
+                    deal_authenticity = impulse_factors.get("deal_authenticity", 0)
+                    if deal_authenticity == 25:
+                        validation_results.append("✅ Acer test: Deal authenticity factor matches expected value (25/30)")
+                    else:
+                        validation_results.append(f"❌ Acer test: Deal authenticity factor {deal_authenticity} doesn't match expected value (25/30)")
+                    
+                    # Check that other factors are 0
+                    other_factors = ["price_manipulation", "scarcity_tactics", "emotional_triggers", 
+                                    "urgency_language", "volatility_factor"]
+                    all_zeros = all(impulse_factors.get(factor, -1) == 0 for factor in other_factors)
+                    if all_zeros:
+                        validation_results.append("✅ Acer test: All other impulse factors are 0 as expected")
+                    else:
+                        validation_results.append("❌ Acer test: Some impulse factors are not 0 as expected")
             else:
                 validation_results.append(f"❌ Impulse factor breakdown is missing fields: {', '.join(missing_factor_fields)}")
         else:
