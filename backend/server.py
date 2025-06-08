@@ -101,15 +101,23 @@ class KeepaClient:
                 timestamp_minutes = csv_data[i]
                 price_cents = csv_data[i + 1]
                 
-                if timestamp_minutes != -1 and price_cents != -1:
-                    timestamp = keepa_epoch + timedelta(minutes=timestamp_minutes)
-                    price = price_cents / 100.0  # Convert cents to dollars
+                # Ensure we have valid numeric values
+                if (timestamp_minutes is not None and price_cents is not None and 
+                    timestamp_minutes != -1 and price_cents != -1 and
+                    isinstance(timestamp_minutes, (int, float)) and isinstance(price_cents, (int, float))):
                     
-                    price_history.append({
-                        "timestamp": timestamp.isoformat(),
-                        "price": price,
-                        "date": timestamp.strftime("%Y-%m-%d")
-                    })
+                    try:
+                        timestamp = keepa_epoch + timedelta(minutes=int(timestamp_minutes))
+                        price = float(price_cents) / 100.0  # Convert cents to dollars
+                        
+                        price_history.append({
+                            "timestamp": timestamp.isoformat(),
+                            "price": price,
+                            "date": timestamp.strftime("%Y-%m-%d")
+                        })
+                    except (ValueError, TypeError, OverflowError) as e:
+                        logging.warning(f"Error parsing price data point: {e}")
+                        continue
         
         return sorted(price_history, key=lambda x: x["timestamp"])
     
