@@ -176,40 +176,96 @@ const EnhancedImpulseSaver = () => {
             <div key={index} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
               <div className="flex justify-between items-start">
                 <div className="flex-1">
-                  <h5 className="font-semibold text-gray-800 text-sm mb-1">
-                    {alt.title.substring(0, 80)}...
+                  <h5 className="font-semibold text-gray-800 text-sm mb-2">
+                    {alt.title.length > 80 ? alt.title.substring(0, 80) + '...' : alt.title}
                   </h5>
-                  <div className="flex items-center gap-4 text-sm text-gray-600">
-                    <span className="font-bold text-green-600">
+                  
+                  {/* Price and Rating Row */}
+                  <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
+                    <span className="font-bold text-green-600 text-lg">
                       {formatCurrency(alt.price)}
                     </span>
                     {alt.rating && (
-                      <span>⭐ {alt.rating.toFixed(1)}</span>
+                      <span className="flex items-center">
+                        <span className="text-yellow-500 mr-1">⭐</span>
+                        <span className="font-medium">{alt.rating.toFixed(1)}/5</span>
+                      </span>
                     )}
                     {alt.review_count && (
-                      <span>({alt.review_count} reviews)</span>
+                      <span className="text-gray-500">
+                        ({alt.review_count.toLocaleString()} reviews)
+                      </span>
                     )}
                   </div>
-                  <div className="mt-2 text-xs text-gray-500">
-                    {alt.why_better}
+                  
+                  {/* Savings Information */}
+                  <div className="mb-3">
+                    <div className="bg-green-100 text-green-800 px-2 py-1 rounded-md text-sm font-semibold inline-block">
+                      Save {formatCurrency(alt.savings)} ({alt.savings_percent}% off)
+                    </div>
+                  </div>
+                  
+                  {/* Why Better */}
+                  <div className="text-xs text-gray-600 mb-3">
+                    <span className="font-medium text-blue-600">Why this is better:</span> {alt.why_better}
+                  </div>
+                  
+                  {/* Product ASIN */}
+                  <div className="text-xs text-gray-400">
+                    ASIN: {alt.asin}
                   </div>
                 </div>
-                <div className="ml-4 text-center">
-                  <div className="bg-green-100 text-green-800 px-2 py-1 rounded-md text-sm font-semibold">
-                    Save {formatCurrency(alt.savings)}
-                  </div>
+                
+                {/* Action Buttons */}
+                <div className="ml-4 flex flex-col gap-2">
+                  <a 
+                    href={alt.amazon_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded text-sm font-medium transition-colors text-center"
+                  >
+                    View on Amazon
+                  </a>
                   <a 
                     href={alt.affiliate_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-2 inline-block bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs transition-colors"
+                    className="inline-block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium transition-colors text-center"
                   >
-                    View Alternative
+                    Buy with Support
                   </a>
+                </div>
+              </div>
+              
+              {/* Comparison Highlight */}
+              <div className="mt-3 pt-3 border-t border-gray-100">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-gray-500">Compared to original:</span>
+                  <div className="flex items-center gap-4">
+                    <span className="text-green-600 font-medium">
+                      {alt.savings > 0 ? `${alt.savings_percent}% cheaper` : 'Similar price'}
+                    </span>
+                    {alt.rating && (
+                      <span className="text-blue-600 font-medium">
+                        {alt.rating >= 4.5 ? 'Excellent rating' : 
+                         alt.rating >= 4.0 ? 'Very good rating' : 
+                         alt.rating >= 3.5 ? 'Good rating' : 'Fair rating'}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           ))}
+        </div>
+        
+        {/* Alternative Search Info */}
+        <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+          <div className="text-sm text-blue-800">
+            <span className="font-medium">💡 Smart Tip:</span> These alternatives are found based on similar features, 
+            better ratings, or lower prices. "View on Amazon" shows the direct product page, while "Buy with Support" 
+            includes our affiliate link to support the service.
+          </div>
         </div>
       </div>
     );
