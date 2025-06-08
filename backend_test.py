@@ -251,9 +251,9 @@ def main():
     
     # Test with valid Amazon URLs that should have rich historical data
     test_urls = [
+        "https://www.amazon.com/Sony-WH-1000XM4-Canceling-Headphones-phone-call/dp/B0863TXGM3",  # Sony WH-1000XM4 (specified in requirements)
         "https://www.amazon.com/Apple-iPhone-15-Pro-256GB/dp/B0CHX1K3R7",  # iPhone 15 Pro
         "https://www.amazon.com/Sony-WH-1000XM5-Canceling-Wireless-Headphones/dp/B09XS7JWHH",  # Sony WH-1000XM5
-        "https://www.amazon.com/dp/B08N5WRWNW",  # Example from the requirements
         "https://www.amazon.com/Samsung-Unlocked-Smartphone-Intelligent-Graphite/dp/B0CRBHPQ1F",  # Samsung Galaxy S24
         "https://www.amazon.com/Kindle-Paperwhite-16-adjustable-lighting/dp/B08KTZ8249"  # Kindle Paperwhite
     ]
