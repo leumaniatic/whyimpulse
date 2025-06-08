@@ -881,7 +881,7 @@ async def find_alternatives(product_title: str, current_price: float, asin: str)
                         rating=rating,
                         review_count=review_count,
                         asin=alt_asin,
-                        affiliate_url=f"https://amazon.com/dp/{alt_asin}?tag=impulse-20",
+                        affiliate_url=f"https://amazon.com/dp/{alt_asin}?tag={AMAZON_AFFILIATE_TAG}",
                         amazon_url=f"https://amazon.com/dp/{alt_asin}",
                         image_url=image_url,
                         savings=round(savings, 2),
