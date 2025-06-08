@@ -456,8 +456,26 @@ def main():
     
     # Test with valid Amazon URLs that should have rich historical data
     test_urls = [
+        # 1. Electronics (Known working)
         "https://www.amazon.com/Sony-WH-1000XM4-Canceling-Headphones-phone-call/dp/B0863TXGM3",  # Sony WH-1000XM4 (specified in requirements)
-        "https://www.amazon.com/acer-Aspire-Copilot-Display-Processor/dp/B0DWNLN3KP/ref=sr_1_2_sspa?_encoding=UTF8&content-id=amzn1.sym.1d3b8f55-c47a-4b7f-a127-3409d1ca6dd1&dib=eyJ2IjoiMSJ9.DiQvAQRlLQCB5Gsx8d6OAKQdyJH2afvkWXNs41V3qFo7-nq45NCujulA4cSK-uYB3We7fDTL9qAvqRgYcLenBScgRnQjipU2mp6uQpXIza4gIvo0DjInn8pZ8t3p86n_kjHsakQ4CGuXbau2n-MbWTxTOI4KjDUSId1GcE_D8EVVlbEn3fsli_StqxG-cBLG_4bDASPquRu9WqT01DfYW-TSQd-yDXwA6eFZJ6FzOzs.iZxbUSNgjOQV-Qj2a6TXRZ9ZWW3IJl6VOk_RR_mWFAE&dib_tag=se&keywords=laptops&pd_rd_r=3fc0bf83-468d-4f3a-8096-3913ae936332&pd_rd_w=OX2sM&pd_rd_wg=pXefA&qid=1749380161&sr=8-2-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&th=1"  # Acer Laptop (specified in requirements)
+        
+        # 2. Laptops (Should work)
+        "https://www.amazon.com/acer-Aspire-Copilot-Display-Processor/dp/B0DWNLN3KP",  # Acer laptop (specified in requirements)
+        
+        # 3. Books (Test new category)
+        "https://www.amazon.com/Atomic-Habits-Proven-Build-Break/dp/0735211299",  # Atomic Habits
+        
+        # 4. Kitchen Appliances (Test new category)
+        "https://www.amazon.com/COSORI-Electric-Gooseneck-Variable-Temperature/dp/B077JBQZPX",  # Coffee maker
+        
+        # 5. Beauty/Skincare (Test new category)
+        "https://www.amazon.com/CeraVe-Moisturizing-Cream-Daily-Moisturizer/dp/B00TTD9BRC",  # CeraVe moisturizer
+        
+        # 6. Pet Supplies (Test new category)
+        "https://www.amazon.com/KONG-Classic-Dog-Toy-Large/dp/B0002AR0II",  # KONG dog toy
+        
+        # 7. Fitness Equipment (Test new category)
+        "https://www.amazon.com/Bodylastics-Resistance-Exercise-Snap-Guard/dp/B006NZZQJE"  # Resistance bands
     ]
     
     # Test with multiple valid URLs to ensure consistent behavior
