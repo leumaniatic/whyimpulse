@@ -390,6 +390,9 @@ const EnhancedImpulseSaver = () => {
             <p className="text-gray-600">
               Get comprehensive analysis with historical pricing, alternatives, and manipulation detection
             </p>
+            <p className="text-sm text-gray-500 mt-1">
+              ✅ Supports: amazon.com links and a.co short links
+            </p>
           </div>
 
           <div className="flex gap-4 max-w-2xl mx-auto">
