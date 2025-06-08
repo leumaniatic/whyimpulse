@@ -472,6 +472,8 @@ def main():
             
             # Special validation for Sony WH-1000XM4 headphones (first URL)
             is_sony_headphones = i == 0
+            is_acer_laptop = i == 1
+            
             if is_sony_headphones:
                 print("\n🎧 VALIDATING SONY WH-1000XM4 HEADPHONES (SPECIFIED TEST PRODUCT)")
                 print("Expected values from requirements:")
@@ -481,8 +483,17 @@ def main():
                 print("- Price range: $129.99 - $349.99")
                 print("- Impulse score: 20/100 (low manipulation risk)")
                 print("- Inflation detected: false")
+                print("- Alternatives: JBL Tune 760NC and Apple AirPods Max with images")
             
-            tester.validate_enhanced_features(response, is_sony_headphones)
+            if is_acer_laptop:
+                print("\n💻 VALIDATING ACER LAPTOP (SPECIFIED TEST PRODUCT)")
+                print("Expected values from requirements:")
+                print("- Deal quality: 'fair' (score: 25/100)")
+                print("- Deal authenticity factor: 25/30 (others should be 0)")
+                print("- Alternatives: HP Pavilion with $230 savings (26.1% off)")
+                print("- Alternative should have image")
+            
+            tester.validate_enhanced_features(response, is_sony_headphones, is_acer_laptop)
             
             # Check basic response structure
             required_fields = [
