@@ -1,0 +1,322 @@
+==================================================
+🧪 ENHANCED IMPULSE SAVER PRO API TEST SUITE
+==================================================
+
+🔍 Testing API Root...
+✅ Passed - Status: 200
+
+🔍 Testing with Electronics URL: https://www.amazon.com/Sony-WH-1000XM4-Canceling-Headphones-phone-call/dp/B0863TXGM3
+
+🔍 Testing Product Analysis...
+✅ Passed - Status: 200
+
+📋 Validating enhanced features for Electronics...
+
+🎧 VALIDATING SONY WH-1000XM4 HEADPHONES (SPECIFIED TEST PRODUCT)
+Expected values from requirements:
+- Current price: $228
+- Average price: $272.67 (16.4% savings)
+- Deal quality: 'good' (score: 78/100)
+- Price range: $129.99 - $349.99
+- Impulse score: 20/100 (low manipulation risk)
+- Inflation detected: false
+- Alternatives: JBL Tune 760NC and Apple AirPods Max with images
+
+📋 Enhanced Features Validation:
+✅ Historical price data is present (30 data points)
+✅ Price history data structure is valid
+✅ Deal analysis data is complete
+✅ Deal quality classification is valid: good (Score: 78/100)
+✅ Price trend analysis is valid
+✅ Sony test: current_price matches expected value (228.0)
+✅ Sony test: average_price matches expected value (272.67)
+✅ Sony test: quality matches expected value (good)
+✅ Sony test: score matches expected value (78)
+✅ Sony test: min_price matches expected value (129.99)
+✅ Sony test: max_price matches expected value (349.99)
+✅ Price manipulation detection data is complete
+✅ Inflation detection flag is valid: False
+✅ Sony test: Correctly shows no price manipulation detected
+✅ Product alternatives are present (2 alternatives)
+✅ Alternative product data structure is valid
+✅ Direct Amazon URL format is valid
+✅ Affiliate URL format is valid
+✅ Sony test: JBL Tune 760NC alternative found
+✅ Sony test: JBL alternative has image URL
+✅ Sony test: Apple AirPods Max alternative found
+✅ Sony test: AirPods alternative has image URL
+✅ Impulse factor breakdown is complete
+✅ Sony test: Impulse score matches expected value (20/100)
+✅ Response structure is valid
+✅ Product data structure is valid
+✅ Impulse score is valid: 20/100
+✅ Verdict format is valid: WAIT with specific reasoning
+
+🔍 Testing with Laptops URL: https://www.amazon.com/acer-Aspire-Copilot-Display-Processor/dp/B0DWNLN3KP
+
+🔍 Testing Product Analysis...
+✅ Passed - Status: 200
+
+📋 Validating enhanced features for Laptops...
+
+💻 VALIDATING ACER LAPTOP (SPECIFIED TEST PRODUCT)
+Expected values from requirements:
+- Deal quality: 'fair' (score: 25/100)
+- Deal authenticity factor: 25/30 (others should be 0)
+- Alternatives: HP Pavilion with $230 savings (26.1% off)
+- Alternative should have image
+
+📋 Enhanced Features Validation:
+✅ Historical price data is present (9 data points)
+✅ Price history data structure is valid
+✅ Deal analysis data is complete
+✅ Deal quality classification is valid: poor (Score: 10/100)
+✅ Price trend analysis is valid
+❌ Acer test: quality value poor doesn't match expected fair
+❌ Acer test: score value 10 doesn't match expected 25
+✅ Price manipulation detection data is complete
+✅ Inflation detection flag is valid: False
+✅ Product alternatives are present (1 alternatives)
+✅ Alternative product data structure is valid
+✅ Direct Amazon URL format is valid
+✅ Affiliate URL format is valid
+✅ Acer test: HP Pavilion alternative found
+✅ Acer test: HP alternative has image URL
+✅ Impulse factor breakdown is complete
+✅ Acer test: Deal authenticity factor matches expected value (25/30)
+✅ Response structure is valid
+✅ Product data structure is valid
+✅ Impulse score is valid: 25/100
+✅ Verdict format is valid: WAIT with specific reasoning
+
+🔍 Testing with Books URL: https://www.amazon.com/Atomic-Habits-Proven-Build-Break/dp/0735211299
+
+🔍 Testing Product Analysis...
+✅ Passed - Status: 200
+
+📋 Validating enhanced features for Books...
+✅ Response structure is valid
+✅ Product data structure is valid
+✅ Impulse score is valid: 20/100
+✅ Verdict format is valid: BUY with specific reasoning
+
+🔍 Testing with Kitchen URL: https://www.amazon.com/COSORI-Electric-Gooseneck-Variable-Temperature/dp/B077JBQZPX
+
+🔍 Testing Product Analysis...
+✅ Passed - Status: 200
+
+📋 Validating enhanced features for Kitchen...
+✅ Response structure is valid
+✅ Product data structure is valid
+✅ Impulse score is valid: 15/100
+✅ Verdict format is valid: WAIT with specific reasoning
+
+🔍 Testing with Beauty URL: https://www.amazon.com/CeraVe-Moisturizing-Cream-Daily-Moisturizer/dp/B00TTD9BRC
+
+🔍 Testing Product Analysis...
+✅ Passed - Status: 200
+
+📋 Validating enhanced features for Beauty...
+✅ Response structure is valid
+✅ Product data structure is valid
+✅ Impulse score is valid: 25/100
+✅ Verdict format is valid: BUY with specific reasoning
+
+🔍 Testing with Pet Supplies URL: https://www.amazon.com/KONG-Classic-Dog-Toy-Large/dp/B0002AR0II
+
+🔍 Testing Product Analysis...
+✅ Passed - Status: 200
+
+📋 Validating enhanced features for Pet Supplies...
+✅ Response structure is valid
+✅ Product data structure is valid
+✅ Impulse score is valid: 40/100
+✅ Verdict format is valid: WAIT with specific reasoning
+
+🔍 Testing with Fitness URL: https://www.amazon.com/Bodylastics-Resistance-Exercise-Snap-Guard/dp/B006NZZQJE
+
+🔍 Testing Product Analysis...
+✅ Passed - Status: 200
+
+📋 Validating enhanced features for Fitness...
+✅ Response structure is valid
+✅ Product data structure is valid
+✅ Impulse score is valid: 0/100
+✅ Verdict format is valid: WAIT with specific reasoning
+
+🔄 Checking consistency across multiple product analyses...
+✅ All responses have consistent structure
+
+🔍 Testing with invalid URLs...
+
+🔍 Testing Invalid URL Validation...
+✅ Passed - Status: 400
+
+🔍 Testing Invalid URL Validation...
+✅ Passed - Status: 400
+
+🔍 Testing recent analyses endpoint...
+
+🔍 Testing Recent Analyses...
+✅ Passed - Status: 200
+✅ Recent analyses endpoint returned 10 items
+✅ Recent analyses contains data
+✅ Recent analyses items have valid structure
+
+================================================================================
+📊 COMPREHENSIVE CATEGORY SUPPORT REPORT
+================================================================================
+
+🔍 Analyzing category: Electronics (Sony Headphones)
+
+📋 ELECTRONICS (SONY HEADPHONES) CATEGORY VALIDATION:
+❌ Electronics (Sony Headphones): Category not properly identified in analysis
+✅ Electronics (Sony Headphones): All 6 impulse factors present
+✅ Electronics (Sony Headphones): 3 impulse factors have meaningful values
+✅ Electronics (Sony Headphones): Alternatives found (2)
+✅ Electronics (Sony Headphones): All alternatives have product images
+✅ Electronics (Sony Headphones): All alternatives have Amazon and affiliate links
+✅ Electronics (Sony Headphones): All alternatives have savings calculations
+✅ Electronics (Sony Headphones): AI recommendation is substantial
+✅ Electronics (Sony Headphones): Pros and cons are present and relevant
+✅ Electronics (Sony Headphones): Verdict is appropriate
+✅ Electronics (Sony Headphones): Price history data available for charts
+✅ Electronics (Sony Headphones): Deal quality indicators present
+
+📊 ELECTRONICS (SONY HEADPHONES) SUMMARY: 11 passed, 0 warnings, 1 failed
+
+🔍 Analyzing category: Laptops (Acer)
+
+📋 LAPTOPS (ACER) CATEGORY VALIDATION:
+✅ Laptops (Acer): Category properly identified in analysis
+✅ Laptops (Acer): All 6 impulse factors present
+✅ Laptops (Acer): 1 impulse factors have meaningful values
+✅ Laptops (Acer): Alternatives found (1)
+✅ Laptops (Acer): All alternatives have product images
+✅ Laptops (Acer): All alternatives have Amazon and affiliate links
+✅ Laptops (Acer): All alternatives have savings calculations
+✅ Laptops (Acer): AI recommendation is substantial
+✅ Laptops (Acer): Pros and cons are present and relevant
+✅ Laptops (Acer): Verdict is appropriate
+✅ Laptops (Acer): Price history data available for charts
+✅ Laptops (Acer): Deal quality indicators present
+
+📊 LAPTOPS (ACER) SUMMARY: 12 passed, 0 warnings, 0 failed
+
+🔍 Analyzing category: Books (Atomic Habits)
+
+📋 BOOKS (ATOMIC HABITS) CATEGORY VALIDATION:
+✅ Books (Atomic Habits): Category properly identified in analysis
+✅ Books (Atomic Habits): All 6 impulse factors present
+✅ Books (Atomic Habits): 2 impulse factors have meaningful values
+❌ Books (Atomic Habits): No alternatives found
+✅ Books (Atomic Habits): AI recommendation is substantial
+✅ Books (Atomic Habits): Pros and cons are present and relevant
+✅ Books (Atomic Habits): Verdict is appropriate
+✅ Books (Atomic Habits): Price history data available for charts
+✅ Books (Atomic Habits): Deal quality indicators present
+
+📊 BOOKS (ATOMIC HABITS) SUMMARY: 8 passed, 0 warnings, 1 failed
+
+🔍 Analyzing category: Kitchen (Coffee Maker)
+
+📋 KITCHEN (COFFEE MAKER) CATEGORY VALIDATION:
+❌ Kitchen (Coffee Maker): Category not properly identified in analysis
+✅ Kitchen (Coffee Maker): All 6 impulse factors present
+✅ Kitchen (Coffee Maker): 2 impulse factors have meaningful values
+❌ Kitchen (Coffee Maker): No alternatives found
+✅ Kitchen (Coffee Maker): AI recommendation is substantial
+✅ Kitchen (Coffee Maker): Pros and cons are present and relevant
+✅ Kitchen (Coffee Maker): Verdict is appropriate
+❌ Kitchen (Coffee Maker): Price history data missing
+✅ Kitchen (Coffee Maker): Deal quality indicators present
+
+📊 KITCHEN (COFFEE MAKER) SUMMARY: 6 passed, 0 warnings, 3 failed
+
+🔍 Analyzing category: Beauty (CeraVe)
+
+📋 BEAUTY (CERAVE) CATEGORY VALIDATION:
+✅ Beauty (CeraVe): Category properly identified in analysis
+✅ Beauty (CeraVe): All 6 impulse factors present
+✅ Beauty (CeraVe): 1 impulse factors have meaningful values
+❌ Beauty (CeraVe): No alternatives found
+✅ Beauty (CeraVe): AI recommendation is substantial
+✅ Beauty (CeraVe): Pros and cons are present and relevant
+✅ Beauty (CeraVe): Verdict is appropriate
+✅ Beauty (CeraVe): Price history data available for charts
+✅ Beauty (CeraVe): Deal quality indicators present
+
+📊 BEAUTY (CERAVE) SUMMARY: 8 passed, 0 warnings, 1 failed
+
+🔍 Analyzing category: Pet Supplies (KONG)
+
+📋 PET SUPPLIES (KONG) CATEGORY VALIDATION:
+✅ Pet Supplies (KONG): Category properly identified in analysis
+✅ Pet Supplies (KONG): All 6 impulse factors present
+✅ Pet Supplies (KONG): 3 impulse factors have meaningful values
+❌ Pet Supplies (KONG): No alternatives found
+✅ Pet Supplies (KONG): AI recommendation is substantial
+✅ Pet Supplies (KONG): Pros and cons are present and relevant
+✅ Pet Supplies (KONG): Verdict is appropriate
+✅ Pet Supplies (KONG): Price history data available for charts
+✅ Pet Supplies (KONG): Deal quality indicators present
+
+📊 PET SUPPLIES (KONG) SUMMARY: 8 passed, 0 warnings, 1 failed
+
+🔍 Analyzing category: Fitness (Resistance Bands)
+
+📋 FITNESS (RESISTANCE BANDS) CATEGORY VALIDATION:
+❌ Fitness (Resistance Bands): Category not properly identified in analysis
+✅ Fitness (Resistance Bands): All 6 impulse factors present
+❌ Fitness (Resistance Bands): All impulse factors are zero
+❌ Fitness (Resistance Bands): No alternatives found
+✅ Fitness (Resistance Bands): AI recommendation is substantial
+✅ Fitness (Resistance Bands): Pros and cons are present and relevant
+✅ Fitness (Resistance Bands): Verdict is appropriate
+❌ Fitness (Resistance Bands): Price history data missing
+✅ Fitness (Resistance Bands): Deal quality indicators present
+
+📊 FITNESS (RESISTANCE BANDS) SUMMARY: 5 passed, 0 warnings, 4 failed
+
+================================================================================
+📋 CATEGORY SUPPORT SUMMARY
+================================================================================
+CATEGORY                  | SUCCESS    | WARNING    | FAIL       | SCORE     
+--------------------------------------------------------------------------------
+Electronics (Sony Headpho | 11         | 0          | 1          | 91.7% ✅ WORKING
+Laptops (Acer)            | 12         | 0          | 0          | 100.0% ✅ WORKING
+Books (Atomic Habits)     | 8          | 0          | 1          | 88.9% ✅ WORKING
+Kitchen (Coffee Maker)    | 6          | 0          | 3          | 66.7% ⚠️ PARTIAL
+Beauty (CeraVe)           | 8          | 0          | 1          | 88.9% ✅ WORKING
+Pet Supplies (KONG)       | 8          | 0          | 1          | 88.9% ✅ WORKING
+Fitness (Resistance Bands | 5          | 0          | 4          | 55.6% ⚠️ PARTIAL
+================================================================================
+
+🟢 WORKING WELL:
+  - Electronics (Sony Headphones)
+  - Laptops (Acer)
+  - Books (Atomic Habits)
+  - Beauty (CeraVe)
+  - Pet Supplies (KONG)
+
+🟡 PARTIAL SUPPORT:
+  - Kitchen (Coffee Maker)
+  - Fitness (Resistance Bands)
+
+🔴 NEEDS IMPROVEMENT:
+
+==================================================
+📊 TEST SUMMARY: 11/11 tests passed
+==================================================
+✅ PASSED - API Root (GET https://e581c80c-36c8-433f-9fe0-c7f8897a053a.preview.emergentagent.com/api/)
+✅ PASSED - Product Analysis (POST https://e581c80c-36c8-433f-9fe0-c7f8897a053a.preview.emergentagent.com/api/analyze)
+✅ PASSED - Product Analysis (POST https://e581c80c-36c8-433f-9fe0-c7f8897a053a.preview.emergentagent.com/api/analyze)
+✅ PASSED - Product Analysis (POST https://e581c80c-36c8-433f-9fe0-c7f8897a053a.preview.emergentagent.com/api/analyze)
+✅ PASSED - Product Analysis (POST https://e581c80c-36c8-433f-9fe0-c7f8897a053a.preview.emergentagent.com/api/analyze)
+✅ PASSED - Product Analysis (POST https://e581c80c-36c8-433f-9fe0-c7f8897a053a.preview.emergentagent.com/api/analyze)
+✅ PASSED - Product Analysis (POST https://e581c80c-36c8-433f-9fe0-c7f8897a053a.preview.emergentagent.com/api/analyze)
+✅ PASSED - Product Analysis (POST https://e581c80c-36c8-433f-9fe0-c7f8897a053a.preview.emergentagent.com/api/analyze)
+✅ PASSED - Invalid URL Validation (POST https://e581c80c-36c8-433f-9fe0-c7f8897a053a.preview.emergentagent.com/api/analyze)
+✅ PASSED - Invalid URL Validation (POST https://e581c80c-36c8-433f-9fe0-c7f8897a053a.preview.emergentagent.com/api/analyze)
+✅ PASSED - Recent Analyses (GET https://e581c80c-36c8-433f-9fe0-c7f8897a053a.preview.emergentagent.com/api/recent-analyses)
+==================================================
