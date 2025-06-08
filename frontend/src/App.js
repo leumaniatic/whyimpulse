@@ -17,8 +17,9 @@ const EnhancedImpulseSaver = () => {
       return;
     }
 
-    if (!url.includes('amazon.')) {
-      setError("Please enter a valid Amazon URL");
+    const urlLower = url.toLowerCase();
+    if (!urlLower.includes('amazon.') && !urlLower.includes('a.co')) {
+      setError("Please enter a valid Amazon URL (amazon.com or a.co short link)");
       return;
     }
 
