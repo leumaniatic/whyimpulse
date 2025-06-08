@@ -607,19 +607,27 @@ class ProductAnalysisRequest(BaseModel):
     amazon_url: str
 
 # Helper Functions
-def extract_asin_from_url(url: str) -> Optional[str]:
-    """Extract ASIN from Amazon URL including short URLs"""
-    # Handle Amazon short URLs (a.co) by following redirects
+def resolve_amazon_url(url: str) -> str:
+    """Resolve Amazon short URLs to full URLs"""
     if 'a.co' in url:
         try:
-            logging.info(f"Processing short URL: {url}")
-            response = requests.get(url, allow_redirects=True, timeout=10)
+            logging.info(f"Resolving short URL: {url}")
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+            response = requests.get(url, headers=headers, allow_redirects=True, timeout=15)
             final_url = response.url
-            logging.info(f"Short URL redirected to: {final_url}")
-            url = final_url
+            logging.info(f"Resolved to: {final_url}")
+            return final_url
         except Exception as e:
-            logging.error(f"Error following short URL redirect: {e}")
-            # Continue with original URL if redirect fails
+            logging.error(f"Error resolving short URL: {e}")
+            return url
+    return url
+
+def extract_asin_from_url(url: str) -> Optional[str]:
+    """Extract ASIN from Amazon URL including short URLs"""
+    # First resolve any short URLs
+    resolved_url = resolve_amazon_url(url)
     
     patterns = [
         r'/dp/([A-Z0-9]{10})',
@@ -627,17 +635,18 @@ def extract_asin_from_url(url: str) -> Optional[str]:
         r'asin=([A-Z0-9]{10})',
         r'/([A-Z0-9]{10})/?(?:\?|$)',
         r'/product/([A-Z0-9]{10})',
-        r'product/([A-Z0-9]{10})'
+        r'product/([A-Z0-9]{10})',
+        r'/exec/obidos/ASIN/([A-Z0-9]{10})'
     ]
     
     for pattern in patterns:
-        match = re.search(pattern, url)
+        match = re.search(pattern, resolved_url)
         if match:
             asin = match.group(1)
-            logging.info(f"Extracted ASIN: {asin} from URL: {url}")
+            logging.info(f"Extracted ASIN: {asin} from URL: {resolved_url}")
             return asin
     
-    logging.warning(f"Could not extract ASIN from URL: {url}")
+    logging.warning(f"Could not extract ASIN from URL: {resolved_url}")
     return None
 
 def extract_amazon_product_data(url: str) -> ProductData:
