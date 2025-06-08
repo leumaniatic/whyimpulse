@@ -120,14 +120,14 @@ class EnhancedImpulseSaverAPITester:
         print("="*50)
         return self.tests_passed == self.tests_run
 
-    def validate_enhanced_features(self, response):
+    def validate_enhanced_features(self, response, is_sony_headphones=False):
         """Validate the enhanced features in the response"""
         validation_results = []
         
         # 1. Historical Price Analysis
         if "price_history" in response and isinstance(response["price_history"], list):
             if len(response["price_history"]) > 0:
-                validation_results.append("✅ Historical price data is present")
+                validation_results.append(f"✅ Historical price data is present ({len(response['price_history'])} data points)")
                 
                 # Check price history structure
                 price_point = response["price_history"][0]
@@ -156,7 +156,7 @@ class EnhancedImpulseSaverAPITester:
                 
                 # Check deal quality value
                 if deal_analysis["quality"] in ["excellent", "very good", "good", "fair", "poor", "unknown"]:
-                    validation_results.append("✅ Deal quality classification is valid")
+                    validation_results.append(f"✅ Deal quality classification is valid: {deal_analysis['quality']} (Score: {deal_analysis['score']}/100)")
                 else:
                     validation_results.append(f"❌ Invalid deal quality: {deal_analysis['quality']}")
                 
@@ -165,6 +165,34 @@ class EnhancedImpulseSaverAPITester:
                     validation_results.append("✅ Price trend analysis is valid")
                 else:
                     validation_results.append(f"❌ Invalid price trend: {deal_analysis['trend']}")
+                
+                # Special validation for Sony headphones
+                if is_sony_headphones:
+                    # Validate expected values from requirements
+                    expected_values = {
+                        "current_price": 228,
+                        "average_price": 272.67,
+                        "quality": "good",
+                        "score": 78,
+                        "min_price": 129.99,
+                        "max_price": 349.99
+                    }
+                    
+                    for key, expected_value in expected_values.items():
+                        if key in deal_analysis:
+                            actual_value = deal_analysis[key]
+                            # Allow for small floating point differences
+                            if isinstance(expected_value, float) and isinstance(actual_value, float):
+                                is_close = abs(expected_value - actual_value) < 0.5
+                                if is_close:
+                                    validation_results.append(f"✅ Sony test: {key} matches expected value ({actual_value})")
+                                else:
+                                    validation_results.append(f"❌ Sony test: {key} value {actual_value} doesn't match expected {expected_value}")
+                            else:
+                                if actual_value == expected_value:
+                                    validation_results.append(f"✅ Sony test: {key} matches expected value ({actual_value})")
+                                else:
+                                    validation_results.append(f"❌ Sony test: {key} value {actual_value} doesn't match expected {expected_value}")
             else:
                 validation_results.append(f"❌ Deal analysis is missing fields: {', '.join(missing_deal_fields)}")
         else:
@@ -185,7 +213,13 @@ class EnhancedImpulseSaverAPITester:
                 
                 # Check inflation detection boolean
                 if isinstance(inflation_analysis["inflation_detected"], bool):
-                    validation_results.append("✅ Inflation detection flag is valid")
+                    validation_results.append(f"✅ Inflation detection flag is valid: {inflation_analysis['inflation_detected']}")
+                    
+                    # Special validation for Sony headphones
+                    if is_sony_headphones and inflation_analysis["inflation_detected"] == False:
+                        validation_results.append("✅ Sony test: Correctly shows no price manipulation detected")
+                    elif is_sony_headphones:
+                        validation_results.append("❌ Sony test: Incorrectly shows price manipulation detected")
                 else:
                     validation_results.append("❌ Inflation detection flag is not a boolean")
             else:
@@ -225,6 +259,14 @@ class EnhancedImpulseSaverAPITester:
             
             if not missing_factor_fields:
                 validation_results.append("✅ Impulse factor breakdown is complete")
+                
+                # Special validation for Sony headphones
+                if is_sony_headphones and "impulse_score" in response:
+                    impulse_score = response["impulse_score"]
+                    if impulse_score == 20:
+                        validation_results.append("✅ Sony test: Impulse score matches expected value (20/100)")
+                    else:
+                        validation_results.append(f"❌ Sony test: Impulse score {impulse_score} doesn't match expected value (20/100)")
             else:
                 validation_results.append(f"❌ Impulse factor breakdown is missing fields: {', '.join(missing_factor_fields)}")
         else:
