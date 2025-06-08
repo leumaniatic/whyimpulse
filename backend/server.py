@@ -793,7 +793,7 @@ async def search_amazon_alternatives(product_title: str, current_price: float, o
         
         if category and category in category_alternatives:
             # Generate alternatives with fixed data for consistency
-            for asin, title, base_price, rating, review_count in category_alternatives[category][:3]:
+            for asin, title, base_price, rating, review_count, image_url in category_alternatives[category][:3]:
                 if asin == original_asin:
                     continue
                 
@@ -825,6 +825,7 @@ async def search_amazon_alternatives(product_title: str, current_price: float, o
                         asin=asin,
                         affiliate_url=f"https://amazon.com/dp/{asin}?tag=impulse-20",
                         amazon_url=f"https://amazon.com/dp/{asin}",
+                        image_url=image_url,
                         savings=round(savings, 2),
                         savings_percent=round(savings_percent, 1),
                         why_better=why_better
