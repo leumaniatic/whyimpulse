@@ -612,24 +612,32 @@ def extract_asin_from_url(url: str) -> Optional[str]:
     # Handle Amazon short URLs (a.co) by following redirects
     if 'a.co' in url:
         try:
-            response = requests.head(url, allow_redirects=True, timeout=10)
-            url = response.url  # Get the final redirected URL
-        except:
-            # If redirect fails, try to extract directly
-            pass
+            logging.info(f"Processing short URL: {url}")
+            response = requests.get(url, allow_redirects=True, timeout=10)
+            final_url = response.url
+            logging.info(f"Short URL redirected to: {final_url}")
+            url = final_url
+        except Exception as e:
+            logging.error(f"Error following short URL redirect: {e}")
+            # Continue with original URL if redirect fails
     
     patterns = [
         r'/dp/([A-Z0-9]{10})',
         r'/gp/product/([A-Z0-9]{10})',
         r'asin=([A-Z0-9]{10})',
         r'/([A-Z0-9]{10})/?(?:\?|$)',
-        r'/product/([A-Z0-9]{10})'
+        r'/product/([A-Z0-9]{10})',
+        r'product/([A-Z0-9]{10})'
     ]
     
     for pattern in patterns:
         match = re.search(pattern, url)
         if match:
-            return match.group(1)
+            asin = match.group(1)
+            logging.info(f"Extracted ASIN: {asin} from URL: {url}")
+            return asin
+    
+    logging.warning(f"Could not extract ASIN from URL: {url}")
     return None
 
 def extract_amazon_product_data(url: str) -> ProductData:
