@@ -716,7 +716,8 @@ def main():
         "Kitchen (Coffee Maker)",
         "Beauty (CeraVe)",
         "Pet Supplies (KONG)",
-        "Fitness (Resistance Bands)"
+        "Fitness (Resistance Bands)",
+        "Short URL Test"
     ]
     
     # Validate each category
