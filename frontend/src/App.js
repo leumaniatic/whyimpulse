@@ -397,7 +397,7 @@ const EnhancedImpulseSaver = () => {
               type="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://amazon.com/product-link..."
+              placeholder="https://amazon.com/product-link... or https://a.co/d/abc123"
               className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none text-lg"
               onKeyPress={(e) => e.key === 'Enter' && analyzeProduct()}
             />
