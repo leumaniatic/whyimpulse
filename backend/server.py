@@ -124,11 +124,35 @@ class KeepaClient:
     def calculate_deal_quality(self, current_price: float, price_history: List[Dict]) -> Dict:
         """Calculate comprehensive deal quality"""
         if not price_history or current_price <= 0:
-            return {"quality": "unknown", "score": 0, "analysis": "Insufficient data"}
+            return {
+                "quality": "unknown", 
+                "score": 0, 
+                "current_price": current_price,
+                "average_price": current_price,
+                "min_price": current_price,
+                "max_price": current_price,
+                "percentile": 50.0,
+                "savings_percent": 0.0,
+                "trend": "unknown",
+                "volatility": 0.0,
+                "analysis": "Insufficient data for deal analysis"
+            }
         
         prices = [entry["price"] for entry in price_history if entry["price"] > 0]
         if not prices:
-            return {"quality": "unknown", "score": 0, "analysis": "No valid price data"}
+            return {
+                "quality": "unknown", 
+                "score": 0, 
+                "current_price": current_price,
+                "average_price": current_price,
+                "min_price": current_price,
+                "max_price": current_price,
+                "percentile": 50.0,
+                "savings_percent": 0.0,
+                "trend": "unknown",
+                "volatility": 0.0,
+                "analysis": "No valid price data for analysis"
+            }
         
         # Calculate statistics
         avg_price = sum(prices) / len(prices)
