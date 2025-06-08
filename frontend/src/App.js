@@ -495,6 +495,26 @@ const EnhancedImpulseSaver = () => {
                       Confidence: {analysis.confidence_score}%
                     </div>
                   </div>
+                  
+                  {/* Affiliate Call-to-Action */}
+                  <div className="mt-4 flex gap-3">
+                    <a 
+                      href={analysis.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                    >
+                      View on Amazon
+                    </a>
+                    <a 
+                      href={analysis.affiliate_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                    >
+                      Buy Now (Support Us)
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
