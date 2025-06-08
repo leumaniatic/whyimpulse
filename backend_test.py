@@ -684,6 +684,10 @@ def main():
     tester.test_invalid_url("https://example.com/product")
     tester.test_invalid_url("not-a-url")
     
+    # Test with invalid Amazon short URL
+    print("\n🔍 Testing with invalid Amazon short URL...")
+    tester.test_invalid_url("https://a.co/invalid")
+    
     # Test recent analyses endpoint
     print("\n🔍 Testing recent analyses endpoint...")
     success, recent_analyses = tester.test_recent_analyses()
