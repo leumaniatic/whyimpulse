@@ -1,0 +1,274 @@
+/* WHY IMPULSE? Chrome Extension Styles */
+
+/* Floating Analyze Button */
+#whyimpulse-analyze-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    user-select: none;
+}
+
+#whyimpulse-analyze-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(0,0,0,0.2);
+}
+
+.whyimpulse-btn-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.whyimpulse-icon {
+    font-size: 18px;
+}
+
+.whyimpulse-text {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Loading spinner */
+.whyimpulse-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: whyimpulse-spin 1s linear infinite;
+}
+
+@keyframes whyimpulse-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Results Panel */
+#whyimpulse-results-panel {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    width: 350px;
+    max-height: 500px;
+    z-index: 10000;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    overflow: hidden;
+    animation: whyimpulse-slideIn 0.3s ease-out;
+}
+
+@keyframes whyimpulse-slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.whyimpulse-panel-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.whyimpulse-panel-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.whyimpulse-close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s ease;
+}
+
+.whyimpulse-close-btn:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+.whyimpulse-panel-content {
+    padding: 20px;
+}
+
+/* Verdict */
+.whyimpulse-verdict {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.whyimpulse-verdict.buy {
+    background: #4caf50;
+    color: white;
+}
+
+.whyimpulse-verdict.wait {
+    background: #ff9800;
+    color: white;
+}
+
+.whyimpulse-verdict.skip {
+    background: #f44336;
+    color: white;
+}
+
+/* Impulse Score */
+.whyimpulse-score {
+    margin-bottom: 15px;
+}
+
+.whyimpulse-score-label {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.whyimpulse-score-bar {
+    width: 100%;
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.whyimpulse-score-fill {
+    height: 100%;
+    transition: width 0.5s ease;
+    border-radius: 4px;
+}
+
+/* Deal Quality */
+.whyimpulse-deal {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
+/* Action Buttons */
+.whyimpulse-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.whyimpulse-btn-buy,
+.whyimpulse-btn-full {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 13px;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.whyimpulse-btn-buy {
+    background: #ff9800;
+    color: white;
+}
+
+.whyimpulse-btn-buy:hover {
+    background: #f57c00;
+    color: white;
+    text-decoration: none;
+}
+
+.whyimpulse-btn-full {
+    background: #667eea;
+    color: white;
+}
+
+.whyimpulse-btn-full:hover {
+    background: #5a6fd8;
+    color: white;
+    text-decoration: none;
+}
+
+/* Alternatives */
+.whyimpulse-alternatives {
+    font-size: 13px;
+    color: #333;
+    padding: 10px;
+    background: #e8f5e8;
+    border-radius: 6px;
+    border-left: 4px solid #4caf50;
+}
+
+.whyimpulse-alternatives a {
+    color: #2e7d32;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.whyimpulse-alternatives a:hover {
+    text-decoration: underline;
+}
+
+/* Error */
+.whyimpulse-error {
+    color: #f44336;
+    font-size: 14px;
+    padding: 15px;
+    background: #ffebee;
+    border-radius: 6px;
+    text-align: center;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    #whyimpulse-analyze-btn {
+        top: 10px;
+        right: 10px;
+        padding: 10px 16px;
+    }
+    
+    #whyimpulse-results-panel {
+        top: 60px;
+        right: 10px;
+        left: 10px;
+        width: auto;
+    }
+    
+    .whyimpulse-actions {
+        flex-direction: column;
+    }
+}
