@@ -240,7 +240,7 @@ class EnhancedImpulseSaverAPITester:
 
 def main():
     print("="*50)
-    print("🧪 ENHANCED IMPULSE SAVER API TEST SUITE")
+    print("🧪 ENHANCED IMPULSE SAVER PRO API TEST SUITE")
     print("="*50)
     
     # Setup tester
@@ -258,39 +258,95 @@ def main():
         "https://www.amazon.com/Kindle-Paperwhite-16-adjustable-lighting/dp/B08KTZ8249"  # Kindle Paperwhite
     ]
     
-    # Test with one valid URL first
-    print("\n🔍 Testing with popular product that should have extensive price history...")
-    success, response = tester.test_analyze_product(test_urls[0])
-    
-    # If first test succeeded, check enhanced features
-    if success:
-        print("\n📋 Validating enhanced features...")
-        tester.validate_enhanced_features(response)
+    # Test with multiple valid URLs to ensure consistent behavior
+    all_responses = []
+    for i, url in enumerate(test_urls):
+        print(f"\n🔍 Testing with product URL #{i+1}: {url}")
+        success, response = tester.test_analyze_product(url)
         
-        # Check basic response structure
-        required_fields = [
-            "id", "url", "asin", "product_data", "price_history", "deal_analysis",
-            "inflation_analysis", "alternatives", "verdict", "pros", "cons",
-            "impulse_score", "impulse_factors", "recommendation", "confidence_score"
-        ]
-        
-        missing_fields = [field for field in required_fields if field not in response]
-        
-        if missing_fields:
-            print(f"❌ Missing fields in response: {', '.join(missing_fields)}")
+        if success:
+            all_responses.append(response)
+            print(f"\n📋 Validating enhanced features for product #{i+1}...")
+            tester.validate_enhanced_features(response)
+            
+            # Check basic response structure
+            required_fields = [
+                "id", "url", "asin", "product_data", "price_history", "deal_analysis",
+                "inflation_analysis", "alternatives", "verdict", "pros", "cons",
+                "impulse_score", "impulse_factors", "recommendation", "confidence_score"
+            ]
+            
+            missing_fields = [field for field in required_fields if field not in response]
+            
+            if missing_fields:
+                print(f"❌ Missing fields in response: {', '.join(missing_fields)}")
+            else:
+                print("✅ Response structure is valid")
+                
+                # Validate product data structure
+                product_data = response.get("product_data", {})
+                product_fields = ["title", "price", "image_url", "rating", "review_count", "availability", "asin"]
+                missing_product_fields = [field for field in product_fields if field not in product_data]
+                
+                if missing_product_fields:
+                    print(f"❌ Missing product data fields: {', '.join(missing_product_fields)}")
+                else:
+                    print("✅ Product data structure is valid")
+                
+                # Validate impulse score range
+                impulse_score = response.get("impulse_score", -1)
+                if 0 <= impulse_score <= 100:
+                    print(f"✅ Impulse score is valid: {impulse_score}/100")
+                else:
+                    print(f"❌ Invalid impulse score: {impulse_score}")
+                
+                # Validate verdict format
+                verdict = response.get("verdict", "")
+                if any(keyword in verdict.lower() for keyword in ["buy", "wait", "skip"]):
+                    print(f"✅ Verdict format is valid: {verdict}")
+                else:
+                    print(f"❌ Invalid verdict format: {verdict}")
         else:
-            print("✅ Response structure is valid")
+            print(f"❌ Failed to analyze product URL #{i+1}")
+    
+    # Compare responses to ensure consistent structure
+    if len(all_responses) >= 2:
+        print("\n🔄 Checking consistency across multiple product analyses...")
+        first_keys = set(all_responses[0].keys())
+        consistent = True
         
-        # Test with another product to verify consistency
-        print("\n🔍 Testing with another product for consistency...")
-        tester.test_analyze_product(test_urls[1])
+        for i, response in enumerate(all_responses[1:], 2):
+            current_keys = set(response.keys())
+            if first_keys != current_keys:
+                print(f"❌ Inconsistent response structure for product #{i}")
+                print(f"   Missing: {first_keys - current_keys}")
+                print(f"   Extra: {current_keys - first_keys}")
+                consistent = False
+        
+        if consistent:
+            print("✅ All responses have consistent structure")
     
     # Test with invalid URLs
+    print("\n🔍 Testing with invalid URLs...")
     tester.test_invalid_url("https://example.com/product")
     tester.test_invalid_url("not-a-url")
     
     # Test recent analyses endpoint
-    tester.test_recent_analyses()
+    print("\n🔍 Testing recent analyses endpoint...")
+    success, recent_analyses = tester.test_recent_analyses()
+    
+    if success and isinstance(recent_analyses, list):
+        print(f"✅ Recent analyses endpoint returned {len(recent_analyses)} items")
+        
+        # Check if our analyzed products appear in recent analyses
+        if len(recent_analyses) > 0:
+            print("✅ Recent analyses contains data")
+            
+            # Check structure of recent analyses
+            if all(isinstance(item, dict) for item in recent_analyses):
+                print("✅ Recent analyses items have valid structure")
+            else:
+                print("❌ Recent analyses contains invalid items")
     
     # Print summary
     success = tester.print_summary()
