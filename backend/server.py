@@ -639,11 +639,13 @@ async def analyze_with_enhanced_gpt4(product_data: ProductData, price_history: L
         price_context = ""
         if price_history:
             recent_prices = price_history[-5:]
-            price_context = f"Recent price history: {', '.join([f'${p[\"price\"]}' for p in recent_prices])}"
+            price_list = [f"${p['price']}" for p in recent_prices]
+            price_context = f"Recent price history: {', '.join(price_list)}"
         
         alternatives_context = ""
         if alternatives:
-            alternatives_context = f"Cheaper alternatives available: {', '.join([f'{alt.title} at ${alt.price} (saves ${alt.savings})' for alt in alternatives])}"
+            alt_list = [f"{alt.title} at ${alt.price} (saves ${alt.savings})" for alt in alternatives]
+            alternatives_context = f"Cheaper alternatives available: {', '.join(alt_list)}"
         
         analysis_prompt = f"""
         COMPREHENSIVE PRODUCT ANALYSIS REQUEST:
