@@ -15,19 +15,27 @@ async def test_keepa_api():
     """Test Keepa API directly"""
     print(f"Testing Keepa API with key: {KEEPA_API_KEY[:10]}...")
     
-    # Test with a popular product ASIN
-    asin = "B08N5WRWNW"  # Example ASIN
+    # Test with popular product ASINs
     domain = 1  # US domain
+    test_asins = [
+        "B08N5WRWNW",  # Original ASIN
+        "B0863TXGM3",  # Sony WH-1000XM4 Headphones  
+        "B09G9HD6PD",  # iPhone 13
+        "B08KTZ8249",  # Kindle Paperwhite
+        "B07FZ8S74R",  # Echo Dot
+    ]
     
-    url = "https://api.keepa.com/product"
-    params = {
-        "key": KEEPA_API_KEY,
-        "domain": domain,
-        "asin": asin,
-        "stats": 1,
-        "history": 1,
-        "offers": 20
-    }
+    for asin in test_asins:
+        print(f"\n=== Testing ASIN: {asin} ===")
+        url = "https://api.keepa.com/product"
+        params = {
+            "key": KEEPA_API_KEY,
+            "domain": domain,
+            "asin": asin,
+            "stats": 1,
+            "history": 1,
+            "offers": 20
+        }
     
     try:
         async with aiohttp.ClientSession() as session:
