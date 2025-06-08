@@ -107,18 +107,260 @@ class EnhancedImpulseSaverAPITester:
             200
         )
 
-    def print_summary(self):
-        """Print test summary"""
-        print("\n" + "="*50)
-        print(f"📊 TEST SUMMARY: {self.tests_passed}/{self.tests_run} tests passed")
-        print("="*50)
+    def validate_enhanced_features(self, response, is_sony_headphones=False, is_acer_laptop=False):
+        """Validate the enhanced features in the response"""
+        validation_results = []
         
-        for result in self.test_results:
-            status = "✅ PASSED" if result["success"] else "❌ FAILED"
-            print(f"{status} - {result['name']} ({result['method']} {result['url']})")
+        # 1. Historical Price Analysis
+        if "price_history" in response and isinstance(response["price_history"], list):
+            if len(response["price_history"]) > 0:
+                validation_results.append(f"✅ Historical price data is present ({len(response['price_history'])} data points)")
+                
+                # Check price history structure
+                price_point = response["price_history"][0]
+                if all(key in price_point for key in ["timestamp", "price", "date"]):
+                    validation_results.append("✅ Price history data structure is valid")
+                else:
+                    validation_results.append("❌ Price history data structure is incomplete")
+            else:
+                validation_results.append("⚠️ Price history array is empty")
+        else:
+            validation_results.append("❌ Historical price data is missing")
         
-        print("="*50)
-        return self.tests_passed == self.tests_run
+        # 2. Deal Analysis
+        if "deal_analysis" in response and isinstance(response["deal_analysis"], dict):
+            deal_analysis = response["deal_analysis"]
+            required_deal_fields = [
+                "quality", "score", "current_price", "average_price", 
+                "min_price", "max_price", "percentile", "savings_percent",
+                "trend", "volatility", "analysis"
+            ]
+            
+            missing_deal_fields = [field for field in required_deal_fields if field not in deal_analysis]
+            
+            if not missing_deal_fields:
+                validation_results.append("✅ Deal analysis data is complete")
+                
+                # Check deal quality value
+                if deal_analysis["quality"] in ["excellent", "very good", "good", "fair", "poor", "unknown"]:
+                    validation_results.append(f"✅ Deal quality classification is valid: {deal_analysis['quality']} (Score: {deal_analysis['score']}/100)")
+                else:
+                    validation_results.append(f"❌ Invalid deal quality: {deal_analysis['quality']}")
+                
+                # Check price trend
+                if deal_analysis["trend"] in ["increasing", "decreasing", "stable"]:
+                    validation_results.append("✅ Price trend analysis is valid")
+                else:
+                    validation_results.append(f"❌ Invalid price trend: {deal_analysis['trend']}")
+                
+                # Special validation for Sony headphones
+                if is_sony_headphones:
+                    # Validate expected values from requirements
+                    expected_values = {
+                        "current_price": 228,
+                        "average_price": 272.67,
+                        "quality": "good",
+                        "score": 78,
+                        "min_price": 129.99,
+                        "max_price": 349.99
+                    }
+                    
+                    for key, expected_value in expected_values.items():
+                        if key in deal_analysis:
+                            actual_value = deal_analysis[key]
+                            # Allow for small floating point differences
+                            if isinstance(expected_value, float) and isinstance(actual_value, float):
+                                is_close = abs(expected_value - actual_value) < 0.5
+                                if is_close:
+                                    validation_results.append(f"✅ Sony test: {key} matches expected value ({actual_value})")
+                                else:
+                                    validation_results.append(f"❌ Sony test: {key} value {actual_value} doesn't match expected {expected_value}")
+                            else:
+                                if actual_value == expected_value:
+                                    validation_results.append(f"✅ Sony test: {key} matches expected value ({actual_value})")
+                                else:
+                                    validation_results.append(f"❌ Sony test: {key} value {actual_value} doesn't match expected {expected_value}")
+                
+                # Special validation for Acer laptop
+                if is_acer_laptop:
+                    # Validate expected values from requirements
+                    expected_values = {
+                        "quality": "fair",
+                        "score": 25
+                    }
+                    
+                    for key, expected_value in expected_values.items():
+                        if key in deal_analysis:
+                            actual_value = deal_analysis[key]
+                            if actual_value == expected_value:
+                                validation_results.append(f"✅ Acer test: {key} matches expected value ({actual_value})")
+                            else:
+                                validation_results.append(f"❌ Acer test: {key} value {actual_value} doesn't match expected {expected_value}")
+            else:
+                validation_results.append(f"❌ Deal analysis is missing fields: {', '.join(missing_deal_fields)}")
+        else:
+            validation_results.append("❌ Deal analysis data is missing")
+        
+        # 3. Price Manipulation Detection
+        if "inflation_analysis" in response and isinstance(response["inflation_analysis"], dict):
+            inflation_analysis = response["inflation_analysis"]
+            required_inflation_fields = [
+                "inflation_detected", "inflation_rate", "spike_factor", 
+                "period_days", "start_price", "end_price", "analysis"
+            ]
+            
+            missing_inflation_fields = [field for field in required_inflation_fields if field not in inflation_analysis]
+            
+            if not missing_inflation_fields:
+                validation_results.append("✅ Price manipulation detection data is complete")
+                
+                # Check inflation detection boolean
+                if isinstance(inflation_analysis["inflation_detected"], bool):
+                    validation_results.append(f"✅ Inflation detection flag is valid: {inflation_analysis['inflation_detected']}")
+                    
+                    # Special validation for Sony headphones
+                    if is_sony_headphones and inflation_analysis["inflation_detected"] == False:
+                        validation_results.append("✅ Sony test: Correctly shows no price manipulation detected")
+                    elif is_sony_headphones:
+                        validation_results.append("❌ Sony test: Incorrectly shows price manipulation detected")
+                else:
+                    validation_results.append("❌ Inflation detection flag is not a boolean")
+            else:
+                validation_results.append(f"❌ Price manipulation analysis is missing fields: {', '.join(missing_inflation_fields)}")
+        else:
+            validation_results.append("❌ Price manipulation detection data is missing")
+        
+        # 4. Smart Alternatives
+        if "alternatives" in response and isinstance(response["alternatives"], list):
+            if len(response["alternatives"]) > 0:
+                validation_results.append(f"✅ Product alternatives are present ({len(response['alternatives'])} alternatives)")
+                
+                # Check alternative structure
+                alternative = response["alternatives"][0]
+                required_alt_fields = ["title", "price", "asin", "affiliate_url", "amazon_url", "savings", "savings_percent", "why_better"]
+                
+                missing_alt_fields = [field for field in required_alt_fields if field not in alternative]
+                
+                if not missing_alt_fields:
+                    validation_results.append("✅ Alternative product data structure is valid")
+                    
+                    # Check if both direct Amazon and affiliate links are present
+                    if "amazon_url" in alternative and "affiliate_url" in alternative:
+                        amazon_url = alternative["amazon_url"]
+                        affiliate_url = alternative["affiliate_url"]
+                        
+                        if amazon_url.startswith("https://amazon.com/dp/"):
+                            validation_results.append("✅ Direct Amazon URL format is valid")
+                        else:
+                            validation_results.append(f"❌ Invalid direct Amazon URL format: {amazon_url}")
+                        
+                        if affiliate_url.startswith("https://amazon.com/dp/") and "tag=" in affiliate_url:
+                            validation_results.append("✅ Affiliate URL format is valid")
+                        else:
+                            validation_results.append(f"❌ Invalid affiliate URL format: {affiliate_url}")
+                    else:
+                        validation_results.append("❌ Missing URL fields in alternatives")
+                    
+                    # Special validation for Sony headphones
+                    if is_sony_headphones:
+                        # Check for expected alternatives: JBL Tune 760NC and Apple AirPods Max
+                        alt_titles = [alt["title"] for alt in response["alternatives"]]
+                        jbl_found = any("JBL Tune 760NC" in title for title in alt_titles)
+                        airpods_found = any("Apple AirPods Max" in title for title in alt_titles)
+                        
+                        if jbl_found:
+                            validation_results.append("✅ Sony test: JBL Tune 760NC alternative found")
+                            
+                            # Find the JBL alternative
+                            jbl_alt = next((alt for alt in response["alternatives"] if "JBL Tune 760NC" in alt["title"]), None)
+                            if jbl_alt:
+                                # Check for image URL
+                                if "image_url" in jbl_alt and jbl_alt["image_url"]:
+                                    validation_results.append("✅ Sony test: JBL alternative has image URL")
+                                else:
+                                    validation_results.append("❌ Sony test: JBL alternative missing image URL")
+                        else:
+                            validation_results.append("❌ Sony test: JBL Tune 760NC alternative not found")
+                        
+                        if airpods_found:
+                            validation_results.append("✅ Sony test: Apple AirPods Max alternative found")
+                            
+                            # Find the AirPods alternative
+                            airpods_alt = next((alt for alt in response["alternatives"] if "Apple AirPods Max" in alt["title"]), None)
+                            if airpods_alt:
+                                # Check for image URL
+                                if "image_url" in airpods_alt and airpods_alt["image_url"]:
+                                    validation_results.append("✅ Sony test: AirPods alternative has image URL")
+                                else:
+                                    validation_results.append("❌ Sony test: AirPods alternative missing image URL")
+                        else:
+                            validation_results.append("❌ Sony test: Apple AirPods Max alternative not found")
+                    
+                    # Special validation for Acer laptop
+                    if is_acer_laptop:
+                        # Check for HP Pavilion alternative
+                        hp_found = any("HP Pavilion" in alt["title"] for alt in response["alternatives"])
+                        
+                        if hp_found:
+                            validation_results.append("✅ Acer test: HP Pavilion alternative found")
+                            
+                            # Find the HP alternative
+                            hp_alt = next((alt for alt in response["alternatives"] if "HP Pavilion" in alt["title"]), None)
+                            if hp_alt:
+                                # Check for image URL
+                                if "image_url" in hp_alt and hp_alt["image_url"]:
+                                    validation_results.append("✅ Acer test: HP alternative has image URL")
+                                else:
+                                    validation_results.append("❌ Acer test: HP alternative missing image URL")
+                        else:
+                            validation_results.append("❌ Acer test: HP Pavilion alternative not found")
+                else:
+                    validation_results.append(f"❌ Alternative product data is missing fields: {', '.join(missing_alt_fields)}")
+            else:
+                validation_results.append("⚠️ No alternative products found")
+        else:
+            validation_results.append("❌ Product alternatives data is missing")
+        
+        # 5. Advanced Impulse Scoring
+        if "impulse_factors" in response and isinstance(response["impulse_factors"], dict):
+            impulse_factors = response["impulse_factors"]
+            required_factor_fields = [
+                "price_manipulation", "scarcity_tactics", "emotional_triggers",
+                "urgency_language", "deal_authenticity", "volatility_factor"
+            ]
+            
+            missing_factor_fields = [field for field in required_factor_fields if field not in impulse_factors]
+            
+            if not missing_factor_fields:
+                validation_results.append("✅ Impulse factor breakdown is complete")
+                
+                # Special validation for Sony headphones
+                if is_sony_headphones and "impulse_score" in response:
+                    impulse_score = response["impulse_score"]
+                    if impulse_score == 20:
+                        validation_results.append("✅ Sony test: Impulse score matches expected value (20/100)")
+                    else:
+                        validation_results.append(f"❌ Sony test: Impulse score {impulse_score} doesn't match expected value (20/100)")
+                
+                # Special validation for Acer laptop
+                if is_acer_laptop and "impulse_factors" in response:
+                    deal_authenticity = impulse_factors.get("deal_authenticity", 0)
+                    if deal_authenticity == 25:
+                        validation_results.append("✅ Acer test: Deal authenticity factor matches expected value (25/30)")
+                    else:
+                        validation_results.append(f"❌ Acer test: Deal authenticity factor {deal_authenticity} doesn't match expected value (25/30)")
+            else:
+                validation_results.append(f"❌ Impulse factor breakdown is missing fields: {', '.join(missing_factor_fields)}")
+        else:
+            validation_results.append("❌ Impulse factor breakdown is missing")
+        
+        # Print validation results
+        print("\n📋 Enhanced Features Validation:")
+        for result in validation_results:
+            print(result)
+        
+        # Return overall validation success
+        return all(result.startswith("✅") for result in validation_results)
 
     def validate_category_features(self, response, category_name):
         """Validate category-specific features in the response"""
@@ -143,7 +385,7 @@ class EnhancedImpulseSaverAPITester:
             "books": ["book", "read", "author", "novel", "literature", "pages"],
             "kitchen": ["kitchen", "cooking", "cook", "food", "culinary", "brew", "coffee"],
             "beauty": ["beauty", "skin", "skincare", "moisturizer", "cream", "lotion"],
-            "pet": ["pet", "dog", "cat", "animal", "toy", "kong"],
+            "pet supplies": ["pet", "dog", "cat", "animal", "toy", "kong"],
             "fitness": ["fitness", "exercise", "workout", "resistance", "gym", "training"]
         }
         
@@ -154,10 +396,12 @@ class EnhancedImpulseSaverAPITester:
                 detected_category = cat
                 break
         
-        # If we couldn't detect from title, try to infer from the URL
+        # If we couldn't detect from title, try to infer from the category_name
         if not detected_category:
-            if category_name.lower() in ["electronics", "laptops", "books", "kitchen", "beauty", "pet", "fitness"]:
-                detected_category = category_name.lower()
+            for cat in category_keywords.keys():
+                if cat.lower() in category_name.lower():
+                    detected_category = cat
+                    break
         
         if detected_category:
             # Check if the analysis mentions the correct category
@@ -280,6 +524,19 @@ class EnhancedImpulseSaverAPITester:
             "total": len(validation_results),
             "success_rate": (success_count + (warning_count * 0.5)) / len(validation_results) if len(validation_results) > 0 else 0
         }
+
+    def print_summary(self):
+        """Print test summary"""
+        print("\n" + "="*50)
+        print(f"📊 TEST SUMMARY: {self.tests_passed}/{self.tests_run} tests passed")
+        print("="*50)
+        
+        for result in self.test_results:
+            status = "✅ PASSED" if result["success"] else "❌ FAILED"
+            print(f"{status} - {result['name']} ({result['method']} {result['url']})")
+        
+        print("="*50)
+        return self.tests_passed == self.tests_run
 
 def main():
     print("="*50)
@@ -510,4 +767,3 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
-      
