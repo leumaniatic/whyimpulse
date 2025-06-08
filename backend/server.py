@@ -1280,8 +1280,13 @@ async def analyze_product_enhanced(request: ProductAnalysisRequest):
         # Extract ASIN (this will handle short URL redirects)
         asin = extract_asin_from_url(request.amazon_url)
         if not asin:
-            raise HTTPException(status_code=400, detail="Could not extract product ASIN from URL. Please check the Amazon link.")
+            # Provide helpful error message for short URLs
+            if 'a.co' in request.amazon_url.lower():
+                raise HTTPException(status_code=400, detail="Could not process Amazon short link. Please try using the full Amazon product URL instead (amazon.com/dp/PRODUCTID)")
+            else:
+                raise HTTPException(status_code=400, detail="Could not extract product ASIN from URL. Please check the Amazon link.")
         
+        logging.info(f"Processing product with ASIN: {asin}")
         # Extract basic product data from Amazon
         product_data = extract_amazon_product_data(request.amazon_url)
         
