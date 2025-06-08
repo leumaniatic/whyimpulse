@@ -439,6 +439,13 @@ const EnhancedImpulseSaver = () => {
         {/* Enhanced Analysis Results */}
         {analysis && (
           <div className="space-y-6">
+            {/* Affiliate Disclosure */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+              <p className="text-sm text-blue-800">
+                <span className="font-medium">💡 Affiliate Disclosure:</span> WHY IMPULSE? may earn a commission from purchases made through our links. 
+                This helps keep our service free while providing you with honest, data-driven recommendations.
+              </p>
+            </div>
             {/* Product Overview */}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <div className="flex flex-col md:flex-row gap-6">
