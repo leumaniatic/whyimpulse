@@ -430,6 +430,69 @@ def main():
             else:
                 print("❌ Recent analyses contains invalid items")
     
+    # Generate comprehensive category report
+    print("\n" + "="*80)
+    print("📊 COMPREHENSIVE CATEGORY SUPPORT REPORT")
+    print("="*80)
+    
+    category_results = []
+    
+    # Define category names
+    category_names = [
+        "Electronics (Sony Headphones)",
+        "Laptops (Acer)",
+        "Books (Atomic Habits)",
+        "Kitchen (Coffee Maker)",
+        "Beauty (CeraVe)",
+        "Pet Supplies (KONG)",
+        "Fitness (Resistance Bands)"
+    ]
+    
+    # Validate each category
+    for i, response in enumerate(all_responses):
+        if i < len(category_names):
+            category_name = category_names[i]
+            print(f"\n🔍 Analyzing category: {category_name}")
+            result = tester.validate_category_features(response, category_name)
+            category_results.append(result)
+    
+    # Print summary table
+    print("\n" + "="*80)
+    print("📋 CATEGORY SUPPORT SUMMARY")
+    print("="*80)
+    print(f"{'CATEGORY':<25} | {'SUCCESS':<10} | {'WARNING':<10} | {'FAIL':<10} | {'SCORE':<10}")
+    print("-"*80)
+    
+    for result in category_results:
+        category = result["category"]
+        success = result["success_count"]
+        warning = result["warning_count"]
+        fail = result["fail_count"]
+        score = result["success_rate"] * 100
+        
+        status = "✅ WORKING" if score >= 80 else "⚠️ PARTIAL" if score >= 50 else "❌ BROKEN"
+        
+        print(f"{category[:25]:<25} | {success:<10} | {warning:<10} | {fail:<10} | {score:.1f}% {status}")
+    
+    print("="*80)
+    
+    # Identify what's working vs what needs improvement
+    working_categories = [r["category"] for r in category_results if r["success_rate"] >= 0.8]
+    partial_categories = [r["category"] for r in category_results if 0.5 <= r["success_rate"] < 0.8]
+    broken_categories = [r["category"] for r in category_results if r["success_rate"] < 0.5]
+    
+    print("\n🟢 WORKING WELL:")
+    for category in working_categories:
+        print(f"  - {category}")
+    
+    print("\n🟡 PARTIAL SUPPORT:")
+    for category in partial_categories:
+        print(f"  - {category}")
+    
+    print("\n🔴 NEEDS IMPROVEMENT:")
+    for category in broken_categories:
+        print(f"  - {category}")
+    
     # Print summary
     success = tester.print_summary()
     return 0 if success else 1
